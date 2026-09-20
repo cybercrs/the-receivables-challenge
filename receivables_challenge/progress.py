@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import json
+import secrets
 import zlib
 from collections.abc import MutableMapping
 from typing import Any
@@ -21,15 +22,24 @@ from receivables_challenge.engine import evaluate_valuation
 
 
 SNAPSHOT_PARAM = "progress"
-SNAPSHOT_VERSION = 1
-MAX_TOKEN_LENGTH = 12_000
-MAX_JSON_BYTES = 24_000
+SNAPSHOT_VERSION = 2
+MAX_TOKEN_LENGTH = 16_000
+MAX_JSON_BYTES = 32_000
 VALUATION_METHODS = ("Percentage of receivables", "Aging analysis")
 
 
 def activity_defaults() -> dict[str, Any]:
     return {
         "rc_stage": 0,
+        "rc_shuffle_seed": secrets.randbits(63),
+        "rc_drafts": {
+            "claims": {},
+            "credit": {},
+            "aging": {},
+            "valuation": {},
+            "reporting": {},
+            "management": {},
+        },
         "rc_claim_index": 0,
         "rc_claim_responses": {},
         "rc_credit_index": 0,
@@ -45,6 +55,7 @@ def activity_defaults() -> dict[str, Any]:
         "rc_management_responses": {},
         "rc_attempts": {},
         "rc_first_pass": {},
+        "rc_scroll_to_top": False,
     }
 
 
@@ -120,6 +131,43 @@ def _validate_valuation(raw: object, submitted: bool) -> dict[str, int]:
     return normalized
 
 
+def _validate_simple_draft(raw: object, items, current_index: int) -> dict[str, str]:
+    if not isinstance(raw, dict):
+        raise ValueError("Draft answers must be an object")
+    ids = [item.id for item in items]
+    allowed_ids = set(ids[: current_index + 1])
+    if set(raw) - allowed_ids:
+        raise ValueError("Draft answers are out of sequence")
+    normalized = {}
+    for item in items:
+        if item.id not in raw:
+            continue
+        value = raw[item.id]
+        if not isinstance(value, str) or value not in item.options:
+            raise ValueError("Invalid draft answer")
+        normalized[item.id] = value
+    return normalized
+
+
+def _validate_valuation_draft(raw: object) -> dict[str, int | str]:
+    if not isinstance(raw, dict):
+        raise ValueError("Valuation draft must be an object")
+    field_keys = {key for key, _label in VALUATION_FIELDS}
+    if set(raw) - (field_keys | {"method"}):
+        raise ValueError("Unknown valuation draft field")
+    normalized: dict[str, int | str] = {}
+    for key, value in raw.items():
+        if key == "method":
+            if not isinstance(value, str) or value not in VALUATION_METHODS:
+                raise ValueError("Invalid valuation method draft")
+            normalized[key] = value
+        else:
+            if type(value) is not int or not 0 <= value <= 10_000_000:
+                raise ValueError("Invalid valuation amount draft")
+            normalized[key] = value
+    return normalized
+
+
 def _valid_score_keys() -> set[str]:
     keys = {f"claim:{item.id}" for item in CLAIM_DECISIONS}
     keys |= {f"credit:{item.id}" for item in CREDIT_DECISIONS}
@@ -137,7 +185,7 @@ def _all_correct(responses: dict[str, str], items) -> bool:
 
 def validate_snapshot(raw: object) -> dict[str, Any]:
     expected_keys = {
-        "v", "s", "ci", "cr", "di", "dr", "ar", "as", "vr", "vm", "vs",
+        "v", "s", "z", "d", "ci", "cr", "di", "dr", "ar", "as", "vr", "vm", "vs",
         "ri", "rr", "mi", "mr", "at", "fp",
     }
     if not isinstance(raw, dict) or set(raw) != expected_keys or raw["v"] != SNAPSHOT_VERSION:
@@ -146,6 +194,9 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
     stage = raw["s"]
     if type(stage) is not int or not 0 <= stage <= 7:
         raise ValueError("Invalid stage")
+    shuffle_seed = raw["z"]
+    if type(shuffle_seed) is not int or not 0 <= shuffle_seed < 2**63:
+        raise ValueError("Invalid shuffle seed")
 
     claim_index = _require_index(raw["ci"], len(CLAIM_DECISIONS))
     credit_index = _require_index(raw["di"], len(CREDIT_DECISIONS))
@@ -156,6 +207,22 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
     credits = _answer_prefix(raw["dr"], CREDIT_DECISIONS)
     reporting = _answer_prefix(raw["rr"], REPORTING_DECISIONS)
     management = _answer_prefix(raw["mr"], MANAGEMENT_DECISIONS)
+
+    raw_drafts = raw["d"]
+    if not isinstance(raw_drafts, dict) or set(raw_drafts) != {"c", "d", "a", "v", "r", "m"}:
+        raise ValueError("Invalid draft groups")
+    drafts = {
+        "claims": _validate_simple_draft(raw_drafts["c"], CLAIM_DECISIONS, claim_index),
+        "credit": _validate_simple_draft(raw_drafts["d"], CREDIT_DECISIONS, credit_index),
+        "aging": _validate_aging(raw_drafts["a"], False),
+        "valuation": _validate_valuation_draft(raw_drafts["v"]),
+        "reporting": _validate_simple_draft(raw_drafts["r"], REPORTING_DECISIONS, reporting_index),
+        "management": _validate_simple_draft(raw_drafts["m"], MANAGEMENT_DECISIONS, management_index),
+    }
+    minimum_stages = {"claims": 1, "credit": 2, "aging": 3, "valuation": 4, "reporting": 5, "management": 6}
+    for group, minimum_stage in minimum_stages.items():
+        if stage < minimum_stage and drafts[group]:
+            raise ValueError("Future draft is not allowed")
 
     aging_submitted = raw["as"]
     valuation_submitted = raw["vs"]
@@ -244,6 +311,8 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
 
     return {
         "rc_stage": stage,
+        "rc_shuffle_seed": shuffle_seed,
+        "rc_drafts": drafts,
         "rc_claim_index": claim_index,
         "rc_claim_responses": claims,
         "rc_credit_index": credit_index,
@@ -266,6 +335,15 @@ def snapshot_from_state(state: MutableMapping[str, Any]) -> dict[str, Any]:
     return {
         "v": SNAPSHOT_VERSION,
         "s": state["rc_stage"],
+        "z": state["rc_shuffle_seed"],
+        "d": {
+            "c": state["rc_drafts"]["claims"],
+            "d": state["rc_drafts"]["credit"],
+            "a": state["rc_drafts"]["aging"],
+            "v": state["rc_drafts"]["valuation"],
+            "r": state["rc_drafts"]["reporting"],
+            "m": state["rc_drafts"]["management"],
+        },
         "ci": state["rc_claim_index"],
         "cr": state["rc_claim_responses"],
         "di": state["rc_credit_index"],

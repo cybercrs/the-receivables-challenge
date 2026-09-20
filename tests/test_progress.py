@@ -20,6 +20,7 @@ from receivables_challenge.progress import (
     reset_saved_progress,
     restore_session_state,
     score_summary,
+    snapshot_from_state,
 )
 
 
@@ -68,6 +69,46 @@ class ProgressSnapshotTests(unittest.TestCase):
         self.assertIsNotNone(restored)
         self.assertFalse(restored["rc_first_pass"][f"claim:{first.id}"])
 
+    def test_unsubmitted_draft_and_shuffle_seed_survive_refresh(self):
+        state = activity_defaults()
+        state["rc_stage"] = 1
+        state["rc_shuffle_seed"] = 34108
+        first = CLAIM_DECISIONS[0]
+        state["rc_drafts"]["claims"][first.id] = first.correct
+
+        restored = decode_snapshot(encode_state(state))
+
+        self.assertIsNotNone(restored)
+        self.assertEqual(restored["rc_shuffle_seed"], 34108)
+        self.assertEqual(restored["rc_drafts"]["claims"][first.id], first.correct)
+
+    def test_partial_valuation_draft_survives_refresh(self):
+        state = activity_defaults()
+        state["rc_stage"] = 4
+        state["rc_claim_index"] = len(CLAIM_DECISIONS) - 1
+        state["rc_claim_responses"] = {item.id: item.correct for item in CLAIM_DECISIONS}
+        state["rc_credit_index"] = len(CREDIT_DECISIONS) - 1
+        state["rc_credit_responses"] = {item.id: item.correct for item in CREDIT_DECISIONS}
+        state["rc_aging_responses"] = {invoice.id: invoice.correct_bucket for invoice in INVOICES}
+        state["rc_aging_submitted"] = True
+        state["rc_drafts"]["valuation"] = {
+            "ending_allowance": 22_180,
+            "method": "Aging analysis",
+        }
+
+        restored = decode_snapshot(encode_state(state))
+
+        self.assertIsNotNone(restored)
+        self.assertEqual(restored["rc_drafts"]["valuation"]["ending_allowance"], 22_180)
+        self.assertEqual(restored["rc_drafts"]["valuation"]["method"], "Aging analysis")
+
+    def test_future_draft_is_rejected(self):
+        state = activity_defaults()
+        state["rc_stage"] = 1
+        item = MANAGEMENT_DECISIONS[0]
+        state["rc_drafts"]["management"][item.id] = item.correct
+        self.assertIsNone(decode_snapshot(encode_state(state)))
+
     def test_skipped_stage_is_rejected(self):
         state = activity_defaults()
         state["rc_stage"] = 4
@@ -80,32 +121,11 @@ class ProgressSnapshotTests(unittest.TestCase):
 
     def test_malformed_and_oversized_tokens_are_rejected(self):
         self.assertIsNone(decode_snapshot("not-a-valid-token"))
-        self.assertIsNone(decode_snapshot("x" * 12_001))
+        self.assertIsNone(decode_snapshot("x" * 16_001))
 
     def test_unknown_snapshot_keys_are_rejected(self):
-        token = encode_state(completed_state())
-        restored = decode_snapshot(token)
-        self.assertIsNotNone(restored)
-        raw = {
-            "v": 1,
-            "s": 0,
-            "ci": 0,
-            "cr": {},
-            "di": 0,
-            "dr": {},
-            "ar": {},
-            "as": False,
-            "vr": {},
-            "vm": "",
-            "vs": False,
-            "ri": 0,
-            "rr": {},
-            "mi": 0,
-            "mr": {},
-            "at": {},
-            "fp": {},
-            "unexpected": True,
-        }
+        raw = snapshot_from_state(activity_defaults())
+        raw["unexpected"] = True
         self.assertIsNone(decode_snapshot(encode_raw(raw)))
 
     def test_restore_reset_and_score_summary(self):

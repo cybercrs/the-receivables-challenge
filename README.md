@@ -1,6 +1,6 @@
 # The Receivables Challenge
 
-The Receivables Challenge is a Chapter 8 Streamlit case for an introductory accounting course. Students follow one fictional company's receivables from the original claim through credit decisions, aging, valuation, write-offs, financial-statement presentation, liquidity analysis, and collection strategy.
+The Receivables Challenge is a Streamlit learning experience for introductory accounting. Students follow one fictional company's receivables from the original claim through credit decisions, aging, valuation, write-offs, financial-statement presentation, liquidity analysis, and collection strategy.
 
 The activity uses account increases and decreases, ending account balances, and financial-statement effects. It does not require bookkeeping mechanics that are outside the course.
 
@@ -13,7 +13,7 @@ The activity uses account increases and decreases, ending account balances, and 
 5. Reporting
 6. Management
 
-Progress is stored anonymously in a validated query parameter. No login, database, secrets, or student-identifying information is required.
+Progress is stored anonymously in a validated query parameter. It preserves the current step, submitted work, unfinished selections, and each student's randomized answer order. Students can refresh or bookmark the current URL and resume, while **Start over** replaces the saved state with a fresh activity. Navigation to a new step also resets the content area to the top. No login, database, secrets, or student-identifying information is required.
 
 ## Run locally
 

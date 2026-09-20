@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import random
 from html import escape
 
 import altair as alt
@@ -173,13 +175,15 @@ APP_CSS = f"""
 """
 
 
-STAGE_LABELS = ("Briefing", "Claims", "Credit", "Aging", "Value", "Report", "Manage", "Debrief")
+STAGE_LABELS = ("Brief", "1. Claims", "2. Credit", "3. Aging", "4. Value", "5. Report", "6. Manage", "Complete")
 
 
 def initialize_state() -> None:
     if "rc_restore_attempted" not in st.session_state:
-        restore_session_state(st.session_state, st.query_params.get(SNAPSHOT_PARAM))
+        restored = restore_session_state(st.session_state, st.query_params.get(SNAPSHOT_PARAM))
         st.session_state.rc_restore_attempted = True
+        if restored:
+            st.session_state.rc_scroll_to_top = True
     for key, value in activity_defaults().items():
         if key not in st.session_state:
             st.session_state[key] = value
@@ -187,10 +191,12 @@ def initialize_state() -> None:
 
 def restart_activity() -> None:
     reset_saved_progress(st.session_state, st.query_params)
+    st.session_state.rc_scroll_to_top = True
 
 
 def set_stage(stage: int) -> None:
     st.session_state.rc_stage = stage
+    st.session_state.rc_scroll_to_top = True
 
 
 def advance_item(index_key: str, count: int, next_stage: int) -> None:
@@ -199,16 +205,103 @@ def advance_item(index_key: str, count: int, next_stage: int) -> None:
         set_stage(next_stage)
     else:
         st.session_state[index_key] = index + 1
+        st.session_state.rc_scroll_to_top = True
 
 
-def remove_response(map_key: str, item_id: str) -> None:
-    responses = dict(st.session_state[map_key])
-    responses.pop(item_id, None)
-    st.session_state[map_key] = responses
+def selected_index(options: tuple | list, selected: str | None) -> int | None:
+    return list(options).index(selected) if selected in options else None
 
 
-def reopen_combined(submitted_key: str) -> None:
-    st.session_state[submitted_key] = False
+def shuffled(items: tuple | list, salt: str) -> list:
+    """Return a stable per-student order that survives reruns and refreshes."""
+
+    digest = hashlib.sha256(f"{st.session_state.rc_shuffle_seed}:{salt}".encode("utf-8")).digest()
+    rng = random.Random(int.from_bytes(digest[:8], "big"))
+    ordered = list(items)
+    rng.shuffle(ordered)
+    if len(ordered) > 1 and ordered == list(items):
+        ordered = ordered[1:] + ordered[:1]
+    return ordered
+
+
+def save_simple_draft(group: str, item_id: str, widget_key: str) -> None:
+    drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
+    group_answers = dict(drafts[group])
+    value = st.session_state.get(widget_key)
+    if value is None:
+        group_answers.pop(item_id, None)
+    else:
+        group_answers[item_id] = str(value)
+    drafts[group] = group_answers
+    st.session_state.rc_drafts = drafts
+
+
+def save_aging_draft(invoice_id: str, widget_key: str) -> None:
+    drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
+    aging = dict(drafts["aging"])
+    value = st.session_state.get(widget_key)
+    if value in AGING_BUCKETS:
+        aging[invoice_id] = str(value)
+    else:
+        aging.pop(invoice_id, None)
+    drafts["aging"] = aging
+    st.session_state.rc_drafts = drafts
+
+
+def save_valuation_draft(answer_key: str, widget_key: str) -> None:
+    drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
+    valuation = dict(drafts["valuation"])
+    value = st.session_state.get(widget_key)
+    if answer_key == "method":
+        if value is None:
+            valuation.pop(answer_key, None)
+        else:
+            valuation[answer_key] = str(value)
+    else:
+        valuation[answer_key] = int(value or 0)
+    drafts["valuation"] = valuation
+    st.session_state.rc_drafts = drafts
+
+
+def render_scroll_reset() -> None:
+    """Reset after navigation without overriding student-initiated scrolling."""
+
+    if not st.session_state.pop("rc_scroll_to_top", False):
+        return
+    st.iframe(
+        """
+        <script>
+        (() => {
+          const parent = window.parent;
+          const main = parent.document.querySelector('section[data-testid="stMain"]');
+          if (!main) return;
+          let cancelled = false;
+          let finished = false;
+          const scrollingKeys = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']);
+          const cancel = () => { cancelled = true; cleanup(); };
+          const cancelKey = (event) => { if (scrollingKeys.has(event.key)) cancel(); };
+          const cleanup = () => {
+            parent.removeEventListener('wheel', cancel);
+            parent.removeEventListener('touchstart', cancel);
+            parent.removeEventListener('keydown', cancelKey);
+          };
+          const reset = () => {
+            if (finished) return;
+            finished = true;
+            if (!cancelled) main.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            cleanup();
+          };
+          parent.addEventListener('wheel', cancel, { passive: true });
+          parent.addEventListener('touchstart', cancel, { passive: true });
+          parent.addEventListener('keydown', cancelKey);
+          parent.requestAnimationFrame(() => parent.requestAnimationFrame(reset));
+          parent.setTimeout(reset, 120);
+        })();
+        </script>
+        """,
+        height=1,
+        tab_index=-1,
+    )
 
 
 def store_simple_answer(map_key: str, item_id: str, selected: str, score_key: str, correct: bool) -> None:
@@ -222,7 +315,7 @@ def render_hero() -> None:
     st.markdown(
         """
         <div class="hero">
-          <div class="hero-kicker">CHAPTER 8 INTERACTIVE CASE</div>
+          <div class="hero-kicker">RECEIVABLES DECISION CASE</div>
           <h1>The Receivables Challenge</h1>
           <p><strong>Sales are up, but cash is tight.</strong> Follow each claim from the original transaction to collection, estimation, reporting, and management action.</p>
         </div>
@@ -236,7 +329,7 @@ def render_stage_row() -> None:
     pills = []
     for index, label in enumerate(STAGE_LABELS):
         status = "complete" if index < current else "active" if index == current else ""
-        pills.append(f'<div class="stage-pill {status}">{index + 1}. {escape(label)}</div>')
+        pills.append(f'<div class="stage-pill {status}">{escape(label)}</div>')
     st.markdown(f'<div class="stage-row">{"".join(pills)}</div>', unsafe_allow_html=True)
 
 
@@ -283,7 +376,7 @@ def render_briefing() -> None:
     st.markdown('<div class="eyebrow">Receivables command center</div>', unsafe_allow_html=True)
     st.header("Can strong sales still create a cash problem?")
     st.markdown(
-        f'<p class="lead">You are the receivables team for {escape(COMPANY_NAME)}. Management needs a reliable June 30 report and a plan that improves collection without driving away dependable customers.</p>',
+        f'<p class="lead">You are the receivables team for {escape(COMPANY_NAME)}. Management needs a reliable {escape(REPORTING_DATE)} report and a plan that improves collection without driving away dependable customers.</p>',
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -327,19 +420,32 @@ def render_sequential_stage(
     render_card(item.document, item.title, item.story)
 
     response = st.session_state[responses_key].get(item.id)
-    if response is None:
-        with st.form(f"decision_form_{score_prefix}_{item.id}"):
-            selected = st.radio(
-                item.prompt,
-                item.options,
-                index=None,
-                key=f"widget_{score_prefix}_{item.id}",
-            )
-            submitted = st.form_submit_button(submit_label, type="primary", width="stretch")
-        if submitted:
+    result = evaluate_decision(item.id, response) if response is not None else None
+    if result is None or not result["correct"]:
+        if result is not None:
+            st.warning(f"Review this evidence. {result['explanation']}")
+            st.caption(f"Best response: {result['expected']}")
+            render_effects(str(result["account_effect"]), str(result["statement_effect"]))
+            st.info("Change your choice below, then check the revised response.")
+        draft_group = "claims" if score_prefix == "claim" else "credit"
+        draft = st.session_state.rc_drafts[draft_group].get(item.id)
+        options = shuffled(item.options, f"{score_prefix}-answer-order:{item.id}")
+        widget_key = f"widget_{score_prefix}_{item.id}"
+        selected = st.radio(
+            item.prompt,
+            options,
+            index=selected_index(options, draft),
+            key=widget_key,
+            on_change=save_simple_draft,
+            args=(draft_group, item.id, widget_key),
+        )
+        button_label = "Check revised response" if response is not None else submit_label
+        if st.button(button_label, type="primary", width="stretch"):
             if selected is None:
                 st.warning("Choose a response before checking your reasoning.")
             else:
+                selected = str(selected)
+                save_simple_draft(draft_group, item.id, widget_key)
                 result = evaluate_decision(item.id, selected)
                 store_simple_answer(
                     responses_key,
@@ -349,30 +455,16 @@ def render_sequential_stage(
                     bool(result["correct"]),
                 )
                 st.rerun()
-
-    if response is not None:
-        result = evaluate_decision(item.id, response)
-        if result["correct"]:
-            st.success(f"Correct. {result['explanation']}")
-        else:
-            st.warning(f"Review this evidence. {result['explanation']}")
-            st.caption(f"Best response: {result['expected']}")
+    else:
+        st.success(f"Correct. {result['explanation']}")
         render_effects(str(result["account_effect"]), str(result["statement_effect"]))
-        if result["correct"]:
-            st.button(
-                "Continue",
-                type="primary",
-                width="stretch",
-                on_click=advance_item,
-                args=(index_key, len(items), next_stage),
-            )
-        else:
-            st.button(
-                "Revise my response",
-                width="stretch",
-                on_click=remove_response,
-                args=(responses_key, item.id),
-            )
+        st.button(
+            "Continue",
+            type="primary",
+            width="stretch",
+            on_click=advance_item,
+            args=(index_key, len(items), next_stage),
+        )
 
 
 def render_claims_stage() -> None:
@@ -434,54 +526,28 @@ def render_aging_stage() -> None:
     st.markdown('<div class="eyebrow">Step 3 of the receivables chain</div>', unsafe_allow_html=True)
     st.header("Build the aging schedule")
     st.write("Classify each open invoice by how long it has been unpaid. The same customer evidence will drive the allowance estimate and collection plan.")
+    ordered_invoices = shuffled(INVOICES, "aging-invoice-order")
     invoice_rows = [
         {
             "Customer": invoice.customer,
             "Balance": format_currency(invoice.balance),
             "Status at June 30": invoice.timing,
         }
-        for invoice in INVOICES
+        for invoice in ordered_invoices
     ]
     st.dataframe(invoice_rows, width="stretch", hide_index=True)
 
-    if not st.session_state.rc_aging_submitted:
-        prior = dict(st.session_state.rc_aging_responses)
-        selections = {}
-        options = ("Choose an age category", *AGING_BUCKETS)
-        with st.form("aging_form"):
-            for invoice in INVOICES:
-                prior_value = prior.get(invoice.id, "Choose an age category")
-                selections[invoice.id] = st.selectbox(
-                    f"{invoice.customer} - {format_currency(invoice.balance)} - {invoice.timing}",
-                    options,
-                    index=options.index(prior_value),
-                    key=f"widget_aging_{invoice.id}",
-                )
-            submitted = st.form_submit_button("Check the aging schedule", type="primary", width="stretch")
-        if submitted:
-            if any(value == "Choose an age category" for value in selections.values()):
-                st.warning("Assign every invoice to an age category before checking the schedule.")
-            else:
-                previous = dict(st.session_state.rc_aging_responses)
-                results = evaluate_aging(selections)
-                for invoice in INVOICES:
-                    key = f"aging:{invoice.id}"
-                    if key not in st.session_state.rc_first_pass or previous.get(invoice.id) != selections[invoice.id]:
-                        record_attempt(st.session_state, key, bool(results[invoice.id]["correct"]))
-                st.session_state.rc_aging_responses = selections
-                st.session_state.rc_aging_submitted = True
-                st.rerun()
-
-    if st.session_state.rc_aging_submitted:
-        results = evaluate_aging(st.session_state.rc_aging_responses)
-        all_correct = all(bool(result["correct"]) for result in results.values())
-        for invoice in INVOICES:
+    prior_submission = dict(st.session_state.rc_aging_responses)
+    results = evaluate_aging(prior_submission) if st.session_state.rc_aging_submitted else None
+    all_correct = bool(results) and all(bool(result["correct"]) for result in results.values())
+    if results:
+        for invoice in ordered_invoices:
             result = results[invoice.id]
             render_feedback_row(
                 invoice.customer,
                 bool(result["correct"]),
-                "Use the invoice's status at June 30.",
-                str(result["expected"]),
+                f"Your answer: {prior_submission[invoice.id]}. Use the invoice's status at June 30.",
+                f"Correct category: {result['expected']}",
             )
         if all_correct:
             st.success("The aging schedule is complete. Older balances now receive visibly greater management attention.")
@@ -489,12 +555,39 @@ def render_aging_stage() -> None:
             st.button("Continue to valuation", type="primary", width="stretch", on_click=set_stage, args=(4,))
         else:
             st.warning("At least one invoice is in the wrong age category. Review the number of days past due.")
-            st.button(
-                "Revise the aging schedule",
-                width="stretch",
-                on_click=reopen_combined,
-                args=("rc_aging_submitted",),
+            st.info("Change any category below, then check the revised schedule.")
+
+    if not all_correct:
+        draft = dict(st.session_state.rc_drafts["aging"])
+        selections = {}
+        options = ("Choose an age category", *AGING_BUCKETS)
+        for invoice in ordered_invoices:
+            draft_value = draft.get(invoice.id, "Choose an age category")
+            widget_key = f"widget_aging_{invoice.id}"
+            selections[invoice.id] = st.selectbox(
+                f"{invoice.customer} - {format_currency(invoice.balance)} - {invoice.timing}",
+                options,
+                index=options.index(draft_value),
+                key=widget_key,
+                on_change=save_aging_draft,
+                args=(invoice.id, widget_key),
             )
+        button_label = "Check revised aging schedule" if results else "Check the aging schedule"
+        if st.button(button_label, type="primary", width="stretch"):
+            if any(value == "Choose an age category" for value in selections.values()):
+                st.warning("Assign every invoice to an age category before checking the schedule.")
+            else:
+                drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
+                drafts["aging"] = {key: str(value) for key, value in selections.items()}
+                st.session_state.rc_drafts = drafts
+                results = evaluate_aging(selections)
+                for invoice in INVOICES:
+                    key = f"aging:{invoice.id}"
+                    if key not in st.session_state.rc_first_pass or prior_submission.get(invoice.id) != selections[invoice.id]:
+                        record_attempt(st.session_state, key, bool(results[invoice.id]["correct"]))
+                st.session_state.rc_aging_responses = selections
+                st.session_state.rc_aging_submitted = True
+                st.rerun()
 
 
 def render_valuation_stage() -> None:
@@ -520,62 +613,26 @@ def render_valuation_stage() -> None:
         unsafe_allow_html=True,
     )
 
-    if not st.session_state.rc_valuation_submitted:
-        prior = dict(st.session_state.rc_valuation_responses)
-        with st.form("valuation_form"):
-            responses = {}
-            for key, label in VALUATION_FIELDS:
-                responses[key] = int(
-                    st.number_input(
-                        label,
-                        min_value=0,
-                        max_value=10_000_000,
-                        value=int(prior.get(key, 0)),
-                        step=100,
-                        key=f"widget_valuation_{key}",
-                    )
-                )
-            method = st.radio(
-                "Which method responds most directly to the concentration of older invoices?",
-                ("Percentage of receivables", "Aging analysis"),
-                index=None,
-                key="widget_valuation_method",
-            )
-            submitted = st.form_submit_button("Check the valuation", type="primary", width="stretch")
-        if submitted:
-            if method is None:
-                st.warning("Choose an estimation method before checking the valuation.")
-            else:
-                previous = dict(st.session_state.rc_valuation_responses)
-                result = evaluate_valuation(responses, method)
-                for key, _label in VALUATION_FIELDS:
-                    score_key = f"valuation:{key}"
-                    if score_key not in st.session_state.rc_first_pass or previous.get(key) != responses[key]:
-                        record_attempt(st.session_state, score_key, bool(result["fields"][key]["correct"]))
-                if "valuation:method" not in st.session_state.rc_first_pass or st.session_state.rc_valuation_method != method:
-                    record_attempt(st.session_state, "valuation:method", bool(result["method"]["correct"]))
-                st.session_state.rc_valuation_responses = responses
-                st.session_state.rc_valuation_method = method
-                st.session_state.rc_valuation_submitted = True
-                st.rerun()
-
-    if st.session_state.rc_valuation_submitted:
-        result = evaluate_valuation(st.session_state.rc_valuation_responses, st.session_state.rc_valuation_method)
+    prior_submission = dict(st.session_state.rc_valuation_responses)
+    prior_method = str(st.session_state.rc_valuation_method)
+    result = evaluate_valuation(prior_submission, prior_method) if st.session_state.rc_valuation_submitted else None
+    valuation_correct = bool(result) and bool(result["correct"])
+    if result:
         labels = dict(VALUATION_FIELDS)
         for key, field_result in result["fields"].items():
             render_feedback_row(
                 labels[key],
                 bool(field_result["correct"]),
-                "Use the aging estimate and the existing allowance balance.",
-                format_currency(int(field_result["expected"])),
+                f"Your answer: {format_currency(prior_submission[key])}. Use the aging estimate and the existing allowance balance.",
+                f"Correct amount: {format_currency(int(field_result['expected']))}",
             )
         render_feedback_row(
             "Method selection",
             bool(result["method"]["correct"]),
-            "Older balances carry different expected loss rates.",
-            str(result["method"]["expected"]),
+            f"Your answer: {prior_method}. Older balances carry different expected loss rates.",
+            f"Best method: {result['method']['expected']}",
         )
-        if result["correct"]:
+        if valuation_correct:
             expected = valuation_values()
             st.success("Valuation complete. The receivables are now stated at the amount management expects to collect in cash.")
             st.markdown(
@@ -590,12 +647,53 @@ def render_valuation_stage() -> None:
             st.button("Continue to reporting", type="primary", width="stretch", on_click=set_stage, args=(5,))
         else:
             st.warning("Some amounts or the method selection need revision. Follow the aging schedule from gross receivables to the required ending allowance.")
-            st.button(
-                "Revise the valuation",
-                width="stretch",
-                on_click=reopen_combined,
-                args=("rc_valuation_submitted",),
+            st.info("Change any amount or the method below, then check the revised valuation.")
+
+    if not valuation_correct:
+        draft = dict(st.session_state.rc_drafts["valuation"])
+        responses = {}
+        for key, label in VALUATION_FIELDS:
+            widget_key = f"widget_valuation_{key}"
+            responses[key] = int(
+                st.number_input(
+                    label,
+                    min_value=0,
+                    max_value=10_000_000,
+                    value=int(draft.get(key, 0)),
+                    step=100,
+                    key=widget_key,
+                    on_change=save_valuation_draft,
+                    args=(key, widget_key),
+                )
             )
+        method_options = shuffled(("Percentage of receivables", "Aging analysis"), "valuation-method-order")
+        method = st.radio(
+            "Which method responds most directly to the concentration of older invoices?",
+            method_options,
+            index=selected_index(method_options, draft.get("method")),
+            key="widget_valuation_method",
+            on_change=save_valuation_draft,
+            args=("method", "widget_valuation_method"),
+        )
+        button_label = "Check revised valuation" if result else "Check the valuation"
+        if st.button(button_label, type="primary", width="stretch"):
+            if method is None:
+                st.warning("Choose an estimation method before checking the valuation.")
+            else:
+                drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
+                drafts["valuation"] = {**responses, "method": str(method)}
+                st.session_state.rc_drafts = drafts
+                checked = evaluate_valuation(responses, str(method))
+                for key, _label in VALUATION_FIELDS:
+                    score_key = f"valuation:{key}"
+                    if score_key not in st.session_state.rc_first_pass or prior_submission.get(key) != responses[key]:
+                        record_attempt(st.session_state, score_key, bool(checked["fields"][key]["correct"]))
+                if "valuation:method" not in st.session_state.rc_first_pass or prior_method != method:
+                    record_attempt(st.session_state, "valuation:method", bool(checked["method"]["correct"]))
+                st.session_state.rc_valuation_responses = responses
+                st.session_state.rc_valuation_method = str(method)
+                st.session_state.rc_valuation_submitted = True
+                st.rerun()
 
 
 def render_writeoff_visual() -> None:
@@ -619,15 +717,32 @@ def render_reporting_stage() -> None:
     st.progress((index + 1) / len(REPORTING_DECISIONS), text=f"Reporting decision {index + 1} of {len(REPORTING_DECISIONS)}")
     render_card(item.document, item.title, item.story)
     response = st.session_state.rc_reporting_responses.get(item.id)
+    result = evaluate_decision(item.id, response) if response is not None else None
 
-    if response is None:
-        with st.form(f"reporting_form_{item.id}"):
-            selected = st.radio(item.prompt, item.options, index=None, key=f"widget_reporting_{item.id}")
-            submitted = st.form_submit_button("Check the reporting decision", type="primary", width="stretch")
-        if submitted:
+    if result is None or not result["correct"]:
+        if result is not None:
+            st.warning(f"Review the reporting purpose. {result['explanation']}")
+            st.caption(f"Best response: {result['expected']}")
+            render_effects(str(result["account_effect"]), str(result["statement_effect"]))
+            st.info("Change your choice below, then check the revised reporting decision.")
+        draft = st.session_state.rc_drafts["reporting"].get(item.id)
+        options = shuffled(item.options, f"reporting-answer-order:{item.id}")
+        widget_key = f"widget_reporting_{item.id}"
+        selected = st.radio(
+            item.prompt,
+            options,
+            index=selected_index(options, draft),
+            key=widget_key,
+            on_change=save_simple_draft,
+            args=("reporting", item.id, widget_key),
+        )
+        button_label = "Check revised reporting decision" if response is not None else "Check the reporting decision"
+        if st.button(button_label, type="primary", width="stretch"):
             if selected is None:
                 st.warning("Choose a response before checking your reasoning.")
             else:
+                selected = str(selected)
+                save_simple_draft("reporting", item.id, widget_key)
                 result = evaluate_decision(item.id, selected)
                 store_simple_answer(
                     "rc_reporting_responses",
@@ -637,32 +752,18 @@ def render_reporting_stage() -> None:
                     bool(result["correct"]),
                 )
                 st.rerun()
-
-    if response is not None:
-        result = evaluate_decision(item.id, response)
-        if result["correct"]:
-            st.success(f"Correct. {result['explanation']}")
-        else:
-            st.warning(f"Review the reporting purpose. {result['explanation']}")
-            st.caption(f"Best response: {result['expected']}")
+    else:
+        st.success(f"Correct. {result['explanation']}")
         render_effects(str(result["account_effect"]), str(result["statement_effect"]))
-        if result["correct"] and item.id == "writeoff_accounts":
+        if item.id == "writeoff_accounts":
             render_writeoff_visual()
-        if result["correct"]:
-            st.button(
-                "Continue",
-                type="primary",
-                width="stretch",
-                on_click=advance_item,
-                args=("rc_reporting_index", len(REPORTING_DECISIONS), 6),
-            )
-        else:
-            st.button(
-                "Revise my reporting decision",
-                width="stretch",
-                on_click=remove_response,
-                args=("rc_reporting_responses", item.id),
-            )
+        st.button(
+            "Continue",
+            type="primary",
+            width="stretch",
+            on_click=advance_item,
+            args=("rc_reporting_index", len(REPORTING_DECISIONS), 6),
+        )
 
 
 def render_dashboard() -> None:
@@ -708,7 +809,7 @@ def render_completion() -> None:
         f"All first-pass decisions: {score['correct']} of {score['total']} | "
         f"Practice revisions used: {score['revisions']} | Final mastery: complete"
     )
-    st.subheader("The complete Chapter 8 chain")
+    st.subheader("The complete receivables chain")
     st.markdown(
         """
         1. Identify the type of claim and when it arises.
@@ -729,7 +830,6 @@ def render_completion() -> None:
         - Why would denying credit to every customer be a poor solution even if it eliminated collection risk?
         """
     )
-    st.button("Start over", width="stretch", on_click=restart_activity)
 
 
 def render_management_stage() -> None:
@@ -742,15 +842,32 @@ def render_management_stage() -> None:
     st.progress((index + 1) / len(MANAGEMENT_DECISIONS), text=f"Management decision {index + 1} of {len(MANAGEMENT_DECISIONS)}")
     render_card(item.document, item.title, item.story)
     response = st.session_state.rc_management_responses.get(item.id)
+    result = evaluate_decision(item.id, response) if response is not None else None
 
-    if response is None:
-        with st.form(f"management_form_{item.id}"):
-            selected = st.radio(item.prompt, item.options, index=None, key=f"widget_management_{item.id}")
-            submitted = st.form_submit_button("Check the management decision", type="primary", width="stretch")
-        if submitted:
+    if result is None or not result["correct"]:
+        if result is not None:
+            st.warning(f"Review the evidence and tradeoff. {result['explanation']}")
+            st.caption(f"Best response: {result['expected']}")
+            render_effects(str(result["account_effect"]), str(result["statement_effect"]))
+            st.info("Change your choice below, then check the revised management decision.")
+        draft = st.session_state.rc_drafts["management"].get(item.id)
+        options = shuffled(item.options, f"management-answer-order:{item.id}")
+        widget_key = f"widget_management_{item.id}"
+        selected = st.radio(
+            item.prompt,
+            options,
+            index=selected_index(options, draft),
+            key=widget_key,
+            on_change=save_simple_draft,
+            args=("management", item.id, widget_key),
+        )
+        button_label = "Check revised management decision" if response is not None else "Check the management decision"
+        if st.button(button_label, type="primary", width="stretch"):
             if selected is None:
                 st.warning("Choose a response before checking your reasoning.")
             else:
+                selected = str(selected)
+                save_simple_draft("management", item.id, widget_key)
                 result = evaluate_decision(item.id, selected)
                 store_simple_answer(
                     "rc_management_responses",
@@ -760,44 +877,26 @@ def render_management_stage() -> None:
                     bool(result["correct"]),
                 )
                 st.rerun()
-
-    if response is not None:
-        result = evaluate_decision(item.id, response)
-        if result["correct"]:
-            st.success(f"Sound decision. {result['explanation']}")
-        else:
-            st.warning(f"Review the evidence and tradeoff. {result['explanation']}")
-            st.caption(f"Best response: {result['expected']}")
+    else:
+        st.success(f"Sound decision. {result['explanation']}")
         render_effects(str(result["account_effect"]), str(result["statement_effect"]))
-        if result["correct"]:
-            label = "Finish the case" if index == len(MANAGEMENT_DECISIONS) - 1 else "Continue"
-            st.button(
-                label,
-                type="primary",
-                width="stretch",
-                on_click=advance_item,
-                args=("rc_management_index", len(MANAGEMENT_DECISIONS), 7),
-            )
-        else:
-            st.button(
-                "Revise my management decision",
-                width="stretch",
-                on_click=remove_response,
-                args=("rc_management_responses", item.id),
-            )
+        label = "Finish the case" if index == len(MANAGEMENT_DECISIONS) - 1 else "Continue"
+        st.button(
+            label,
+            type="primary",
+            width="stretch",
+            on_click=advance_item,
+            args=("rc_management_index", len(MANAGEMENT_DECISIONS), 7),
+        )
 
 
 initialize_state()
 st.markdown(APP_CSS, unsafe_allow_html=True)
 render_hero()
-render_stage_row()
-
-with st.sidebar:
-    st.header("The Receivables Challenge")
-    st.write(f"Company: {COMPANY_NAME}")
-    st.write(f"Reporting date: {REPORTING_DATE}")
-    st.write("Progress is saved anonymously in this page's address so a refresh does not erase completed work.")
+top_left, top_right = st.columns([5, 1])
+with top_right:
     st.button("Start over", width="stretch", on_click=restart_activity)
+render_stage_row()
 
 stage = int(st.session_state.rc_stage)
 if stage == 0:
@@ -818,3 +917,4 @@ else:
     render_completion()
 
 sync_progress_query(st.session_state, st.query_params)
+render_scroll_reset()
