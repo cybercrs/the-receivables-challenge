@@ -6,6 +6,7 @@ from collections.abc import Mapping
 
 from receivables_challenge.case_data import (
     AGING_BUCKETS,
+    AGING_DECISIONS,
     AGING_LOSS_RATES,
     BEGINNING_ALLOWANCE,
     BEGINNING_NET_ACCOUNTS_RECEIVABLE,
@@ -16,6 +17,7 @@ from receivables_challenge.case_data import (
     NET_CREDIT_SALES,
     PERCENTAGE_OF_RECEIVABLES_RATE,
     REPORTING_DECISIONS,
+    VALUATION_BENEFIT_CORRECT,
 )
 
 
@@ -31,7 +33,13 @@ def format_currency(value: int | float) -> str:
 def decision_by_id(item_id: str):
     """Find any sequential case decision by its stable identifier."""
 
-    for collection in (CLAIM_DECISIONS, CREDIT_DECISIONS, REPORTING_DECISIONS, MANAGEMENT_DECISIONS):
+    for collection in (
+        CLAIM_DECISIONS,
+        CREDIT_DECISIONS,
+        AGING_DECISIONS,
+        REPORTING_DECISIONS,
+        MANAGEMENT_DECISIONS,
+    ):
         for item in collection:
             if item.id == item_id:
                 return item
@@ -114,7 +122,7 @@ def valuation_values() -> dict[str, int]:
     }
 
 
-def evaluate_valuation(responses: Mapping[str, int], method: str) -> dict[str, object]:
+def evaluate_valuation(responses: Mapping[str, int], benefit: str) -> dict[str, object]:
     expected = valuation_values()
     fields = {
         key: {
@@ -124,15 +132,15 @@ def evaluate_valuation(responses: Mapping[str, int], method: str) -> dict[str, o
         }
         for key, value in expected.items()
     }
-    correct_method = "Aging analysis"
     return {
         "fields": fields,
-        "method": {
-            "submitted": method,
-            "expected": correct_method,
-            "correct": method == correct_method,
+        "benefit": {
+            "submitted": benefit,
+            "expected": VALUATION_BENEFIT_CORRECT,
+            "correct": benefit == VALUATION_BENEFIT_CORRECT,
         },
-        "correct": all(result["correct"] for result in fields.values()) and method == correct_method,
+        "correct": all(result["correct"] for result in fields.values())
+        and benefit == VALUATION_BENEFIT_CORRECT,
     }
 
 

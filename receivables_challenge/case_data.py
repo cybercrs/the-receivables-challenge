@@ -137,65 +137,64 @@ CLAIM_DECISIONS = (
 
 CREDIT_DECISIONS = (
     Decision(
-        id="school_district",
-        document="Credit application",
-        title="Miami Valley School District",
+        id="longer_payment_window",
+        document="Credit-terms comparison",
+        title="A longer payment window",
         story=(
-            "Five years in business, strong payment history, modest order, and stable public funding."
+            "Gem City is comparing its usual 30-day payment period with a 60-day payment period."
         ),
-        prompt="What is the best credit decision?",
+        prompt="What is the clearest tradeoff of offering customers more time to pay?",
         options=(
-            "Approve standard credit terms",
-            "Approve only a small limit with shorter terms",
-            "Require payment before providing services",
+            "It may support sales, but it can delay cash and keep receivables outstanding longer",
+            "It always increases cash immediately and eliminates collection risk",
+            "It changes a customer account into a note receivable automatically",
         ),
-        correct="Approve standard credit terms",
+        correct="It may support sales, but it can delay cash and keep receivables outstanding longer",
         explanation=(
-            "The customer has a strong payment record and manageable exposure. Standard terms protect sales without adding unusual risk."
+            "More generous terms can make buying easier for customers, but the company waits longer for cash and remains exposed to collection risk."
         ),
-        account_effect="Future approved sales can increase Accounts Receivable until the customer pays.",
-        statement_effect="A balanced policy can support revenue while keeping collection risk reasonable.",
+        account_effect="Accounts Receivable may remain outstanding longer before Cash increases.",
+        statement_effect="Sales may benefit, while liquidity can weaken and expected collection losses can rise.",
     ),
     Decision(
-        id="startup_festival",
-        document="Credit application",
-        title="First-Year Festival LLC",
+        id="shorter_payment_window",
+        document="Credit-terms comparison",
+        title="A shorter payment window",
         story=(
-            "No operating history, no business credit record, a large first order, and most funding depends on ticket sales next month."
+            "Gem City is evaluating what could happen if customers must pay sooner than under its current policy."
         ),
-        prompt="What is the best credit decision?",
+        prompt="Which statement best describes the likely tradeoff?",
         options=(
-            "Approve standard credit terms",
-            "Approve only a small limit with shorter terms",
-            "Require payment before providing services",
+            "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+            "Revenue must increase because every customer will accept the shorter period",
+            "The Allowance for Doubtful Accounts is no longer needed",
         ),
-        correct="Require payment before providing services",
+        correct="Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
         explanation=(
-            "The requested exposure is large and repayment depends on an uncertain future event. Requiring payment avoids an unsupported credit risk."
+            "Shorter terms can improve the timing of collection and reduce exposure, but overly restrictive terms can discourage otherwise profitable sales."
         ),
-        account_effect="Requiring payment prevents a high-risk Accounts Receivable balance from arising.",
-        statement_effect="The company may give up some sales, but it protects cash and reduces expected losses.",
+        account_effect="Accounts Receivable may convert to Cash sooner and remain outstanding for fewer days.",
+        statement_effect="Liquidity may improve, but sales can be affected if customers prefer competitors' terms.",
     ),
     Decision(
-        id="late_repeat_customer",
-        document="Customer history",
-        title="Riverfront Promotions",
+        id="early_payment_discount",
+        document="Credit-terms comparison",
+        title="An early-payment discount",
         story=(
-            "A repeat customer places profitable orders but usually pays 15 to 25 days late. "
-            "Its latest financial information is stable."
+            "Gem City is considering a small discount for customers who pay early instead of waiting until the final due date."
         ),
-        prompt="What is the best credit decision?",
+        prompt="What is the primary benefit and cost of this feature?",
         options=(
-            "Approve standard credit terms",
-            "Approve only a small limit with shorter terms",
-            "Require payment before providing services",
+            "It may speed collection, but the discount reduces the amount of revenue retained",
+            "It delays collection, but it increases the amount every customer pays",
+            "It removes receivables from the balance sheet before customers pay",
         ),
-        correct="Approve only a small limit with shorter terms",
+        correct="It may speed collection, but the discount reduces the amount of revenue retained",
         explanation=(
-            "A controlled limit and shorter terms preserve the relationship while responding to the documented late-payment pattern."
+            "The company gives up a small portion of the selling price in exchange for receiving cash sooner from customers who take the discount."
         ),
-        account_effect="A lower limit caps the amount that can remain in Accounts Receivable.",
-        statement_effect="The policy balances profitable sales against liquidity and collection risk.",
+        account_effect="Cash increases and Accounts Receivable decreases sooner when a customer pays early.",
+        statement_effect="Liquidity can improve, while the discount reduces net sales and net income.",
     ),
 )
 
@@ -252,6 +251,84 @@ AGING_LOSS_RATES = {
     "More than 90 days past due": 1.00,
 }
 
+
+AGING_DECISIONS = (
+    Decision(
+        id="box_1_current_balance",
+        document="Completed aging schedule",
+        title="Interpret box 1",
+        story="Box 1 is in the Current row under Receivables.",
+        prompt="What does the amount in box 1 represent?",
+        options=(
+            "The total open customer balances that are not yet past due at June 30",
+            "The cash already collected from current customers during June",
+            "The portion of current receivables expected to be uncollectible",
+        ),
+        correct="The total open customer balances that are not yet past due at June 30",
+        explanation="The receivables column groups outstanding customer claims by age. Current balances have not yet passed their due dates.",
+        account_effect="Box 1 is part of gross Accounts Receivable; it does not record a new account change.",
+        statement_effect="The amount is included in current assets before the allowance is subtracted.",
+    ),
+    Decision(
+        id="box_2_loss_rate",
+        document="Completed aging schedule",
+        title="Interpret box 2",
+        story="Box 2 is in the 61-90 days past due row under Estimated loss rate.",
+        prompt="What does the percentage in box 2 represent?",
+        options=(
+            "Management's estimate of the portion of that age group that will not be collected",
+            "The percentage of customers whose invoices are exactly 61 days old",
+            "The interest rate charged on every overdue customer balance",
+        ),
+        correct="Management's estimate of the portion of that age group that will not be collected",
+        explanation="An aging schedule applies an estimated loss rate to each age group. The rate generally rises as balances become older.",
+        account_effect="The percentage helps estimate the required Allowance balance; it does not change an account by itself.",
+        statement_effect="The estimate supports the amount used to reduce gross receivables to net realizable value.",
+    ),
+    Decision(
+        id="box_3_bucket_estimate",
+        document="Completed aging schedule",
+        title="Interpret box 3",
+        story="Box 3 is in the More than 90 days past due row under Estimated uncollectible.",
+        prompt="How should the amount in box 3 be interpreted?",
+        options=(
+            "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+            "It is cash that customers in this age group already paid",
+            "It is Bad Debt Expense for the entire company before considering any other age group",
+        ),
+        correct="It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        explanation="The amount combines the balance in that age group with its estimated loss rate. The schedule estimates collection risk; it does not perform a specific write-off.",
+        account_effect="The amount contributes to the required ending Allowance for Doubtful Accounts.",
+        statement_effect="It helps determine the reduction from gross Accounts Receivable to net realizable value.",
+    ),
+    Decision(
+        id="box_4_total_estimate",
+        document="Completed aging schedule",
+        title="Interpret box 4",
+        story="Box 4 is the total of the Estimated uncollectible column.",
+        prompt="How is the total in box 4 used in the allowance method?",
+        options=(
+            "It is the required ending Allowance balance after the bad debt adjustment",
+            "It is automatically the amount of Bad Debt Expense for the period",
+            "It is the ending gross Accounts Receivable balance",
+        ),
+        correct="It is the required ending Allowance balance after the bad debt adjustment",
+        explanation="The aging total is the target ending allowance. The expense equals only the increase needed to move the existing allowance to that target.",
+        account_effect="Allowance for Doubtful Accounts must end at the box 4 total after adjustment.",
+        statement_effect="The balance sheet subtracts that ending allowance from gross Accounts Receivable.",
+    ),
+)
+
+
+VALUATION_BENEFIT_OPTIONS = (
+    "It reflects that older receivables often have a different collection risk than newer receivables",
+    "It guarantees the exact amount of cash the company will collect",
+    "It eliminates the need to estimate an allowance balance",
+    "It treats every overdue customer balance as an immediate write-off",
+)
+
+VALUATION_BENEFIT_CORRECT = VALUATION_BENEFIT_OPTIONS[0]
+
 BEGINNING_ALLOWANCE = 4_000
 PERCENTAGE_OF_RECEIVABLES_RATE = 0.08
 NET_CREDIT_SALES = 648_000
@@ -280,34 +357,14 @@ REPORTING_DECISIONS = (
         statement_effect="Net realizable value remains $95,820 immediately before and after the write-off.",
     ),
     Decision(
-        id="writeoff_control",
-        document="Control policy",
-        title="Who should approve a write-off?",
-        story=(
-            "Gem City wants to prevent premature write-offs and concealment of cash collection problems."
-        ),
-        prompt="Which approval policy is strongest?",
-        options=(
-            "The employee who receives customer cash should approve it",
-            "A manager without daily cash or receivables duties should approve it",
-            "Any employee may approve it when the customer is more than 90 days late",
-        ),
-        correct="A manager without daily cash or receivables duties should approve it",
-        explanation=(
-            "Independent approval and separation from cash and receivables duties reduce the risk of error or misuse."
-        ),
-        account_effect="Only authorized customer balances are removed from Accounts Receivable and the Allowance.",
-        statement_effect="A strong control supports reliable receivables reporting.",
-    ),
-    Decision(
         id="balance_sheet",
         document="June 30 balance sheet",
-        title="Present the customer receivables",
-        story="Gem City must show both the recorded claims and the amount expected to be collected.",
+        title="Review a proposed presentation",
+        story="Gem City is preparing the current-assets section after completing its bad debt adjustment.",
         prompt="Which presentation is appropriate?",
         options=(
             "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
-            "Current assets: report only gross Accounts Receivable and omit the allowance",
+            "Current assets: report gross Accounts Receivable and disclose the allowance only in the notes",
             "Operating expenses: report the entire customer balance as an expense",
         ),
         correct="Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
@@ -320,24 +377,24 @@ REPORTING_DECISIONS = (
     Decision(
         id="bad_debt_location",
         document="June income statement",
-        title="Locate bad debt expense",
-        story="The period's expected customer credit losses are part of operating the sales function.",
+        title="Review an expense classification",
+        story="Gem City is preparing its income statement after updating the allowance estimate.",
         prompt="Where should Bad Debt Expense appear?",
         options=(
-            "Selling expense within operating expenses",
+            "Operating expense",
             "Current assets",
             "Other revenues and gains",
         ),
-        correct="Selling expense within operating expenses",
-        explanation="Bad debt expense is reported as a selling expense in operating expenses.",
+        correct="Operating expense",
+        explanation="Bad debt expense is reported as an operating expense.",
         account_effect="Bad Debt Expense has increased by the amount needed to reach the required ending allowance.",
         statement_effect="Operating expenses increase and net income decreases.",
     ),
     Decision(
         id="interest_location",
         document="June income statement",
-        title="Locate interest revenue",
-        story="Gem City earned interest from formal customer notes rather than from its main event-service operations.",
+        title="Review a revenue classification",
+        story="Gem City earned interest on customer notes during June.",
         prompt="Where should Interest Revenue appear?",
         options=(
             "Sales revenue",
@@ -352,7 +409,7 @@ REPORTING_DECISIONS = (
     Decision(
         id="risk_disclosure",
         document="Notes to the financial statements",
-        title="Collection risk is becoming significant",
+        title="Review a proposed disclosure",
         story="The balance more than 90 days past due has risen sharply and one large customer is in financial distress.",
         prompt="What should Gem City do in its external reporting?",
         options=(
@@ -372,50 +429,39 @@ MANAGEMENT_DECISIONS = (
     Decision(
         id="turnover",
         document="Liquidity dashboard",
-        title="How often were receivables collected?",
-        story=(
-            "Net credit sales were $648,000. Beginning net Accounts Receivable was $92,000, "
-            "and ending net Accounts Receivable is $95,820."
+        title="Read the turnover signal",
+        story="Use the dashboard's turnover measure to interpret how receivables moved through the business during the year.",
+        prompt="Which statement best interprets receivables turnover?",
+        options=(
+            "It indicates how often average net receivables were converted through credit sales and collection during the year",
+            "It is the percentage of receivables that management expects not to collect",
+            "It measures how much profit the company earned on each credit sale",
         ),
-        prompt="What is the accounts receivable turnover, rounded to one decimal place?",
-        options=("5.5 times", "6.9 times", "7.4 times"),
-        correct="6.9 times",
-        explanation="Average net Accounts Receivable is $93,910. Dividing $648,000 by $93,910 gives approximately 6.9 times.",
+        correct="It indicates how often average net receivables were converted through credit sales and collection during the year",
+        explanation="Receivables turnover relates net credit sales to average net Accounts Receivable and helps evaluate how quickly receivables move toward cash.",
         account_effect="The ratio connects net credit sales with the average net amount invested in customer receivables.",
         statement_effect="A higher turnover generally indicates faster conversion of receivables into cash.",
     ),
     Decision(
         id="collection_period",
-        document="Liquidity dashboard",
-        title="How long does collection take?",
-        story="Gem City's accounts receivable turnover is approximately 6.9 times.",
-        prompt="What is the average collection period, rounded to the nearest half day?",
-        options=("30.0 days", "45.0 days", "52.9 days"),
-        correct="52.9 days",
-        explanation="Dividing 365 days by approximately 6.9 gives an average collection period of about 52.9 days.",
+        document="Credit policy comparison",
+        title="Read the collection-cycle signal",
+        story="Gem City's standard customer payment period is 30 days.",
+        prompt="What concern is raised when that policy is compared with the dashboard?",
+        options=(
+            "Customers are taking substantially longer than the stated payment period on average",
+            "Customers are consistently paying before the stated payment period",
+            "The comparison proves every past-due account will be uncollectible",
+        ),
+        correct="Customers are taking substantially longer than the stated payment period on average",
+        explanation="An average collection period substantially longer than the stated terms suggests that collection performance needs attention.",
         account_effect="Slow collection keeps more resources tied up in Accounts Receivable.",
         statement_effect="The ratio does not change reported balances, but it helps users interpret liquidity.",
     ),
     Decision(
-        id="terms_comparison",
-        document="Credit policy",
-        title="Compare performance with the terms",
-        story="Gem City's standard payment period is 30 days, but the average collection period is about 52.9 days.",
-        prompt="What does the comparison suggest?",
-        options=(
-            "Collections appear effective because 52.9 days is longer than 30 days",
-            "Collections need attention because the average period substantially exceeds the stated terms",
-            "No conclusion is possible because credit terms never affect collection analysis",
-        ),
-        correct="Collections need attention because the average period substantially exceeds the stated terms",
-        explanation="The collection period should not greatly exceed the time customers are allowed to pay.",
-        account_effect="Late collection leaves Accounts Receivable outstanding longer and delays Cash increases.",
-        statement_effect="The comparison helps evaluate the effectiveness of credit and collection policies.",
-    ),
-    Decision(
         id="urgent_cash",
         document="Treasurer request",
-        title="Cash is needed next week",
+        title="Evaluate a short-term cash option",
         story="Gem City needs immediate cash from receivables already on its books and cannot wait for customers to pay.",
         prompt="Which action most directly produces immediate cash?",
         options=(
@@ -430,16 +476,16 @@ MANAGEMENT_DECISIONS = (
     ),
     Decision(
         id="dashboard_focus",
-        document="Customer analytics",
-        title="Direct the collection team",
-        story="The dashboard shows $32,000 is more than 60 days past due, including $14,000 beyond 90 days.",
-        prompt="Which use of the dashboard is most valuable now?",
+        document="Follow-up planning",
+        title="Choose the next management view",
+        story="The summary dashboard identifies a collection concern but does not identify the customers creating it.",
+        prompt="What additional information would be most useful before the team contacts customers?",
         options=(
-            "Focus collection work on the oldest and highest-risk customer balances",
-            "Contact only customers whose invoices are current",
-            "Ignore customer detail and review total sales only",
+            "Customer-by-customer aging details and recent payment history",
+            "The total number of employees in every operating department",
+            "The company's cash sales for the year with no customer detail",
         ),
-        correct="Focus collection work on the oldest and highest-risk customer balances",
+        correct="Customer-by-customer aging details and recent payment history",
         explanation="Aging and customer-level detail help management target the balances most likely to delay cash or become uncollectible.",
         account_effect="Successful follow-up decreases Accounts Receivable and increases Cash.",
         statement_effect="Targeted collection can improve liquidity without automatically reducing sales to reliable customers.",
@@ -447,7 +493,7 @@ MANAGEMENT_DECISIONS = (
     Decision(
         id="balanced_plan",
         document="Board recommendation",
-        title="Choose a balanced receivables plan",
+        title="Bring the evidence together",
         story="Management wants stronger cash flow without unnecessarily driving away reliable customers.",
         prompt="Which recommendation best balances sales, liquidity, and collection risk?",
         options=(
@@ -467,5 +513,8 @@ VALUATION_FIELDS = (
     ("ending_allowance", "Required ending Allowance for Doubtful Accounts"),
     ("allowance_increase", "Increase needed in the Allowance"),
     ("bad_debt_increase", "Increase in Bad Debt Expense"),
-    ("net_realizable_value", "Net realizable value of Accounts Receivable"),
+    (
+        "net_realizable_value",
+        "Net realizable value of Accounts Receivable reported on the June 30 balance sheet after the bad debt adjustment",
+    ),
 )

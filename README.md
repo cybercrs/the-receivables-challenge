@@ -1,6 +1,6 @@
 # The Receivables Challenge
 
-The Receivables Challenge is a Streamlit learning experience for introductory accounting. Students follow one fictional company's receivables from the original claim through credit decisions, aging, valuation, write-offs, financial-statement presentation, liquidity analysis, and collection strategy.
+The Receivables Challenge is a Streamlit learning experience for introductory accounting. Students follow one fictional company's receivables from the original claim through credit-term tradeoffs, interpretation of a completed aging schedule, valuation, write-offs, financial-statement presentation, liquidity analysis, and collection strategy.
 
 The activity uses account increases and decreases, ending account balances, and financial-statement effects. It does not require bookkeeping mechanics that are outside the course.
 

@@ -6,32 +6,27 @@ import hashlib
 import random
 from html import escape
 
-import altair as alt
 import streamlit as st
 
 from receivables_challenge.case_data import (
-    AGING_BUCKETS,
+    AGING_DECISIONS,
     BEGINNING_ALLOWANCE,
     CLAIM_DECISIONS,
     COMPANY_NAME,
     CREDIT_DECISIONS,
-    INVOICES,
     MANAGEMENT_DECISIONS,
-    PERCENTAGE_OF_RECEIVABLES_RATE,
     REPORTING_DATE,
     REPORTING_DECISIONS,
+    VALUATION_BENEFIT_OPTIONS,
     VALUATION_FIELDS,
 )
 from receivables_challenge.engine import (
     aging_allowance_rows,
-    aging_totals,
     dashboard_metrics,
-    evaluate_aging,
     evaluate_decision,
     evaluate_valuation,
     format_currency,
     gross_accounts_receivable,
-    percentage_of_receivables_estimate,
     valuation_values,
     writeoff_comparison,
 )
@@ -236,23 +231,11 @@ def save_simple_draft(group: str, item_id: str, widget_key: str) -> None:
     st.session_state.rc_drafts = drafts
 
 
-def save_aging_draft(invoice_id: str, widget_key: str) -> None:
-    drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
-    aging = dict(drafts["aging"])
-    value = st.session_state.get(widget_key)
-    if value in AGING_BUCKETS:
-        aging[invoice_id] = str(value)
-    else:
-        aging.pop(invoice_id, None)
-    drafts["aging"] = aging
-    st.session_state.rc_drafts = drafts
-
-
 def save_valuation_draft(answer_key: str, widget_key: str) -> None:
     drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
     valuation = dict(drafts["valuation"])
     value = st.session_state.get(widget_key)
-    if answer_key == "method":
+    if answer_key == "benefit":
         if value is None:
             valuation.pop(answer_key, None)
         else:
@@ -261,6 +244,12 @@ def save_valuation_draft(answer_key: str, widget_key: str) -> None:
         valuation[answer_key] = int(value or 0)
     drafts["valuation"] = valuation
     st.session_state.rc_drafts = drafts
+
+
+def escape_dollar_markdown(value: object) -> str:
+    """Keep dollar signs in student-facing Markdown from starting inline math."""
+
+    return str(value).replace("$", r"\$")
 
 
 def render_scroll_reset() -> None:
@@ -423,18 +412,19 @@ def render_sequential_stage(
     result = evaluate_decision(item.id, response) if response is not None else None
     if result is None or not result["correct"]:
         if result is not None:
-            st.warning(f"Review this evidence. {result['explanation']}")
-            st.caption(f"Best response: {result['expected']}")
+            st.warning(escape_dollar_markdown(f"Review this evidence. {result['explanation']}"))
+            st.caption(escape_dollar_markdown(f"Best response: {result['expected']}"))
             render_effects(str(result["account_effect"]), str(result["statement_effect"]))
             st.info("Change your choice below, then check the revised response.")
-        draft_group = "claims" if score_prefix == "claim" else "credit"
+        draft_group = {"claim": "claims", "credit": "credit", "aging": "aging"}[score_prefix]
         draft = st.session_state.rc_drafts[draft_group].get(item.id)
         options = shuffled(item.options, f"{score_prefix}-answer-order:{item.id}")
         widget_key = f"widget_{score_prefix}_{item.id}"
         selected = st.radio(
-            item.prompt,
+            escape_dollar_markdown(item.prompt),
             options,
             index=selected_index(options, draft),
+            format_func=escape_dollar_markdown,
             key=widget_key,
             on_change=save_simple_draft,
             args=(draft_group, item.id, widget_key),
@@ -456,7 +446,7 @@ def render_sequential_stage(
                 )
                 st.rerun()
     else:
-        st.success(f"Correct. {result['explanation']}")
+        st.success(escape_dollar_markdown(f"Correct. {result['explanation']}"))
         render_effects(str(result["account_effect"]), str(result["statement_effect"]))
         st.button(
             "Continue",
@@ -484,138 +474,123 @@ def render_claims_stage() -> None:
 def render_credit_stage() -> None:
     render_sequential_stage(
         eyebrow="Step 2 of the receivables chain",
-        header="Decide who receives credit",
-        introduction="A policy that is too tight can lose sales. A policy that is too loose can create late payments and losses.",
+        header="Evaluate the tradeoffs in credit terms",
+        introduction="Compare how payment windows and early-payment discounts can affect sales, cash timing, and collection risk.",
         items=CREDIT_DECISIONS,
         index_key="rc_credit_index",
         responses_key="rc_credit_responses",
         score_prefix="credit",
         next_stage=3,
-        submit_label="Evaluate the customer",
+        submit_label="Check the tradeoff",
     )
 
 
-def render_aging_chart() -> None:
-    totals = aging_totals()
-    chart_rows = [
-        {"Age category": bucket, "Receivables": totals[bucket]}
-        for bucket in AGING_BUCKETS
-    ]
-    chart = (
-        alt.Chart(alt.Data(values=chart_rows))
-        .mark_bar(color=UD_BLUE, cornerRadiusEnd=4)
-        .encode(
-            x=alt.X("Receivables:Q", title="Receivables", axis=alt.Axis(format="$,.0f")),
-            y=alt.Y(
-                "Age category:N",
-                title=None,
-                sort=list(AGING_BUCKETS),
-                axis=alt.Axis(labelLimit=190),
-            ),
-            tooltip=[
-                alt.Tooltip("Age category:N", title="Age category"),
-                alt.Tooltip("Receivables:Q", title="Receivables", format="$,.0f"),
-            ],
+def completed_aging_schedule() -> list[dict[str, str]]:
+    """Build the one student-facing schedule with four labeled cells."""
+
+    display_rows = []
+    for row in aging_allowance_rows():
+        category = str(row["Age category"])
+        receivables = format_currency(int(row["Receivables"]))
+        rate = f"{float(row['Estimated loss rate']):.0%}"
+        estimate = format_currency(int(row["Estimated uncollectible"]))
+        if category == "Current":
+            receivables = f"[1] {receivables}"
+        if category == "61-90 days past due":
+            rate = f"[2] {rate}"
+        if category == "More than 90 days past due":
+            estimate = f"[3] {estimate}"
+        display_rows.append(
+            {
+                "Age category": category,
+                "Receivables": receivables,
+                "Estimated loss rate": rate,
+                "Estimated uncollectible": estimate,
+            }
         )
-        .properties(height=270)
+    display_rows.append(
+        {
+            "Age category": "Total",
+            "Receivables": format_currency(gross_accounts_receivable()),
+            "Estimated loss rate": "-",
+            "Estimated uncollectible": f"[4] {format_currency(valuation_values()['ending_allowance'])}",
+        }
     )
-    st.altair_chart(chart, width="stretch")
+    return display_rows
 
 
 def render_aging_stage() -> None:
+    index = int(st.session_state.rc_aging_index)
+    item = AGING_DECISIONS[index]
     st.markdown('<div class="eyebrow">Step 3 of the receivables chain</div>', unsafe_allow_html=True)
-    st.header("Build the aging schedule")
-    st.write("Classify each open invoice by how long it has been unpaid. The same customer evidence will drive the allowance estimate and collection plan.")
-    ordered_invoices = shuffled(INVOICES, "aging-invoice-order")
-    invoice_rows = [
-        {
-            "Customer": invoice.customer,
-            "Balance": format_currency(invoice.balance),
-            "Status at June 30": invoice.timing,
-        }
-        for invoice in ordered_invoices
-    ]
-    st.dataframe(invoice_rows, width="stretch", hide_index=True)
+    st.header("Interpret a completed aging schedule")
+    st.write("The schedule is complete. Use the four numbered cells to explain what the figures mean and how they support the allowance estimate.")
+    st.dataframe(completed_aging_schedule(), width="stretch", hide_index=True)
+    st.progress((index + 1) / len(AGING_DECISIONS), text=f"Aging interpretation {index + 1} of {len(AGING_DECISIONS)}")
+    render_card(item.document, item.title, item.story)
 
-    prior_submission = dict(st.session_state.rc_aging_responses)
-    results = evaluate_aging(prior_submission) if st.session_state.rc_aging_submitted else None
-    all_correct = bool(results) and all(bool(result["correct"]) for result in results.values())
-    if results:
-        for invoice in ordered_invoices:
-            result = results[invoice.id]
-            render_feedback_row(
-                invoice.customer,
-                bool(result["correct"]),
-                f"Your answer: {prior_submission[invoice.id]}. Use the invoice's status at June 30.",
-                f"Correct category: {result['expected']}",
-            )
-        if all_correct:
-            st.success("The aging schedule is complete. Older balances now receive visibly greater management attention.")
-            render_aging_chart()
-            st.button("Continue to valuation", type="primary", width="stretch", on_click=set_stage, args=(4,))
-        else:
-            st.warning("At least one invoice is in the wrong age category. Review the number of days past due.")
-            st.info("Change any category below, then check the revised schedule.")
-
-    if not all_correct:
-        draft = dict(st.session_state.rc_drafts["aging"])
-        selections = {}
-        options = ("Choose an age category", *AGING_BUCKETS)
-        for invoice in ordered_invoices:
-            draft_value = draft.get(invoice.id, "Choose an age category")
-            widget_key = f"widget_aging_{invoice.id}"
-            selections[invoice.id] = st.selectbox(
-                f"{invoice.customer} - {format_currency(invoice.balance)} - {invoice.timing}",
-                options,
-                index=options.index(draft_value),
-                key=widget_key,
-                on_change=save_aging_draft,
-                args=(invoice.id, widget_key),
-            )
-        button_label = "Check revised aging schedule" if results else "Check the aging schedule"
+    response = st.session_state.rc_aging_responses.get(item.id)
+    result = evaluate_decision(item.id, response) if response is not None else None
+    if result is None or not result["correct"]:
+        if result is not None:
+            st.warning(escape_dollar_markdown(f"Review this interpretation. {result['explanation']}"))
+            st.caption(escape_dollar_markdown(f"Best response: {result['expected']}"))
+            render_effects(str(result["account_effect"]), str(result["statement_effect"]))
+            st.info("Change your choice below, then check the revised interpretation.")
+        draft = st.session_state.rc_drafts["aging"].get(item.id)
+        options = shuffled(item.options, f"aging-answer-order:{item.id}")
+        widget_key = f"widget_aging_{item.id}"
+        selected = st.radio(
+            escape_dollar_markdown(item.prompt),
+            options,
+            index=selected_index(options, draft),
+            format_func=escape_dollar_markdown,
+            key=widget_key,
+            on_change=save_simple_draft,
+            args=("aging", item.id, widget_key),
+        )
+        button_label = "Check revised interpretation" if response is not None else "Check the interpretation"
         if st.button(button_label, type="primary", width="stretch"):
-            if any(value == "Choose an age category" for value in selections.values()):
-                st.warning("Assign every invoice to an age category before checking the schedule.")
+            if selected is None:
+                st.warning("Choose a response before checking your reasoning.")
             else:
-                drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
-                drafts["aging"] = {key: str(value) for key, value in selections.items()}
-                st.session_state.rc_drafts = drafts
-                results = evaluate_aging(selections)
-                for invoice in INVOICES:
-                    key = f"aging:{invoice.id}"
-                    if key not in st.session_state.rc_first_pass or prior_submission.get(invoice.id) != selections[invoice.id]:
-                        record_attempt(st.session_state, key, bool(results[invoice.id]["correct"]))
-                st.session_state.rc_aging_responses = selections
-                st.session_state.rc_aging_submitted = True
+                selected = str(selected)
+                save_simple_draft("aging", item.id, widget_key)
+                checked = evaluate_decision(item.id, selected)
+                store_simple_answer(
+                    "rc_aging_responses",
+                    item.id,
+                    selected,
+                    f"aging:{item.id}",
+                    bool(checked["correct"]),
+                )
                 st.rerun()
+    else:
+        st.success(escape_dollar_markdown(f"Correct. {result['explanation']}"))
+        render_effects(str(result["account_effect"]), str(result["statement_effect"]))
+        st.button(
+            "Continue",
+            type="primary",
+            width="stretch",
+            on_click=advance_item,
+            args=("rc_aging_index", len(AGING_DECISIONS), 4),
+        )
 
 
 def render_valuation_stage() -> None:
     st.markdown('<div class="eyebrow">Step 4 of the receivables chain</div>', unsafe_allow_html=True)
-    st.header("Estimate what will be collected")
-    st.write("Use the completed aging schedule to determine the required ending allowance, the account increases, and cash realizable value.")
-
-    display_rows = []
-    for row in aging_allowance_rows():
-        display_rows.append(
-            {
-                "Age category": row["Age category"],
-                "Receivables": format_currency(int(row["Receivables"])),
-                "Estimated loss rate": f"{float(row['Estimated loss rate']):.0%}",
-                "Estimated uncollectible": format_currency(int(row["Estimated uncollectible"])),
-            }
-        )
-    st.dataframe(display_rows, width="stretch", hide_index=True)
+    st.header("Determine the balance-sheet net realizable value")
+    st.write("Use the aging result to determine the required allowance, the related account increases, and the net realizable value reported after the bad debt adjustment.")
     st.markdown(
         f"""
-        <div class="formula"><strong>Starting point:</strong> Gross Accounts Receivable is {format_currency(gross_accounts_receivable())}. The Allowance currently has an ending balance of {format_currency(BEGINNING_ALLOWANCE)} before this estimate is applied.</div>
+        <div class="formula"><strong>Starting point from the completed schedule:</strong> Gross Accounts Receivable is {format_currency(gross_accounts_receivable())}; the required ending Allowance is {format_currency(valuation_values()['ending_allowance'])}; and the unadjusted Allowance balance is {format_currency(BEGINNING_ALLOWANCE)}.</div>
         """,
         unsafe_allow_html=True,
     )
 
     prior_submission = dict(st.session_state.rc_valuation_responses)
-    prior_method = str(st.session_state.rc_valuation_method)
-    result = evaluate_valuation(prior_submission, prior_method) if st.session_state.rc_valuation_submitted else None
+    prior_benefit = str(st.session_state.rc_valuation_benefit)
+    result = evaluate_valuation(prior_submission, prior_benefit) if st.session_state.rc_valuation_submitted else None
     valuation_correct = bool(result) and bool(result["correct"])
     if result:
         labels = dict(VALUATION_FIELDS)
@@ -627,27 +602,24 @@ def render_valuation_stage() -> None:
                 f"Correct amount: {format_currency(int(field_result['expected']))}",
             )
         render_feedback_row(
-            "Method selection",
-            bool(result["method"]["correct"]),
-            f"Your answer: {prior_method}. Older balances carry different expected loss rates.",
-            f"Best method: {result['method']['expected']}",
+            "Benefit of aging",
+            bool(result["benefit"]["correct"]),
+            f"Your answer: {prior_benefit}",
+            f"Best response: {result['benefit']['expected']}",
         )
         if valuation_correct:
             expected = valuation_values()
-            st.success("Valuation complete. The receivables are now stated at the amount management expects to collect in cash.")
+            st.success("Valuation complete. The balance sheet will report receivables at the amount management expects to collect in cash after the bad debt adjustment.")
             st.markdown(
                 f"""
                 <div class="principle"><strong>Account and statement effects:</strong> Allowance for Doubtful Accounts increases {format_currency(expected['allowance_increase'])}. Bad Debt Expense increases by the same amount. Net Accounts Receivable and total assets decrease by that amount.</div>
                 """,
                 unsafe_allow_html=True,
             )
-            st.caption(
-                f"For comparison, an 8% percentage-of-receivables estimate would produce {format_currency(percentage_of_receivables_estimate())}, versus {format_currency(expected['ending_allowance'])} from the aging analysis."
-            )
             st.button("Continue to reporting", type="primary", width="stretch", on_click=set_stage, args=(5,))
         else:
-            st.warning("Some amounts or the method selection need revision. Follow the aging schedule from gross receivables to the required ending allowance.")
-            st.info("Change any amount or the method below, then check the revised valuation.")
+            st.warning("Some amounts or the conceptual response need revision. Follow the allowance from its current balance to its required ending balance, then determine balance-sheet net realizable value.")
+            st.info("Change any amount or the conceptual response below, then check the revised valuation.")
 
     if not valuation_correct:
         draft = dict(st.session_state.rc_drafts["valuation"])
@@ -666,32 +638,33 @@ def render_valuation_stage() -> None:
                     args=(key, widget_key),
                 )
             )
-        method_options = shuffled(("Percentage of receivables", "Aging analysis"), "valuation-method-order")
-        method = st.radio(
-            "Which method responds most directly to the concentration of older invoices?",
-            method_options,
-            index=selected_index(method_options, draft.get("method")),
-            key="widget_valuation_method",
+        benefit_options = shuffled(VALUATION_BENEFIT_OPTIONS, "valuation-benefit-order")
+        benefit = st.radio(
+            "What is a key benefit of using an aging schedule to estimate uncollectible accounts?",
+            benefit_options,
+            index=selected_index(benefit_options, draft.get("benefit")),
+            format_func=escape_dollar_markdown,
+            key="widget_valuation_benefit",
             on_change=save_valuation_draft,
-            args=("method", "widget_valuation_method"),
+            args=("benefit", "widget_valuation_benefit"),
         )
         button_label = "Check revised valuation" if result else "Check the valuation"
         if st.button(button_label, type="primary", width="stretch"):
-            if method is None:
-                st.warning("Choose an estimation method before checking the valuation.")
+            if benefit is None:
+                st.warning("Choose a response about aging before checking the valuation.")
             else:
                 drafts = {key: dict(value) for key, value in st.session_state.rc_drafts.items()}
-                drafts["valuation"] = {**responses, "method": str(method)}
+                drafts["valuation"] = {**responses, "benefit": str(benefit)}
                 st.session_state.rc_drafts = drafts
-                checked = evaluate_valuation(responses, str(method))
+                checked = evaluate_valuation(responses, str(benefit))
                 for key, _label in VALUATION_FIELDS:
                     score_key = f"valuation:{key}"
                     if score_key not in st.session_state.rc_first_pass or prior_submission.get(key) != responses[key]:
                         record_attempt(st.session_state, score_key, bool(checked["fields"][key]["correct"]))
-                if "valuation:method" not in st.session_state.rc_first_pass or prior_method != method:
-                    record_attempt(st.session_state, "valuation:method", bool(checked["method"]["correct"]))
+                if "valuation:benefit" not in st.session_state.rc_first_pass or prior_benefit != benefit:
+                    record_attempt(st.session_state, "valuation:benefit", bool(checked["benefit"]["correct"]))
                 st.session_state.rc_valuation_responses = responses
-                st.session_state.rc_valuation_method = str(method)
+                st.session_state.rc_valuation_benefit = str(benefit)
                 st.session_state.rc_valuation_submitted = True
                 st.rerun()
 
@@ -713,7 +686,7 @@ def render_reporting_stage() -> None:
     item = REPORTING_DECISIONS[index]
     st.markdown('<div class="eyebrow">Step 5 of the receivables chain</div>', unsafe_allow_html=True)
     st.header("Write off and report the receivables")
-    st.write("Apply the allowance method, protect the write-off process, and place each amount where financial-statement users can understand it.")
+    st.write("Trace the effect of a specific write-off, then choose the appropriate financial-statement presentation for each receivables-related item.")
     st.progress((index + 1) / len(REPORTING_DECISIONS), text=f"Reporting decision {index + 1} of {len(REPORTING_DECISIONS)}")
     render_card(item.document, item.title, item.story)
     response = st.session_state.rc_reporting_responses.get(item.id)
@@ -721,17 +694,18 @@ def render_reporting_stage() -> None:
 
     if result is None or not result["correct"]:
         if result is not None:
-            st.warning(f"Review the reporting purpose. {result['explanation']}")
-            st.caption(f"Best response: {result['expected']}")
+            st.warning(escape_dollar_markdown(f"Review the reporting purpose. {result['explanation']}"))
+            st.caption(escape_dollar_markdown(f"Best response: {result['expected']}"))
             render_effects(str(result["account_effect"]), str(result["statement_effect"]))
             st.info("Change your choice below, then check the revised reporting decision.")
         draft = st.session_state.rc_drafts["reporting"].get(item.id)
         options = shuffled(item.options, f"reporting-answer-order:{item.id}")
         widget_key = f"widget_reporting_{item.id}"
         selected = st.radio(
-            item.prompt,
+            escape_dollar_markdown(item.prompt),
             options,
             index=selected_index(options, draft),
+            format_func=escape_dollar_markdown,
             key=widget_key,
             on_change=save_simple_draft,
             args=("reporting", item.id, widget_key),
@@ -753,10 +727,11 @@ def render_reporting_stage() -> None:
                 )
                 st.rerun()
     else:
-        st.success(f"Correct. {result['explanation']}")
-        render_effects(str(result["account_effect"]), str(result["statement_effect"]))
+        st.success(escape_dollar_markdown(f"Correct. {result['explanation']}"))
         if item.id == "writeoff_accounts":
             render_writeoff_visual()
+        else:
+            render_effects(str(result["account_effect"]), str(result["statement_effect"]))
         st.button(
             "Continue",
             type="primary",
@@ -796,7 +771,7 @@ def render_completion() -> None:
         <div class="metric-grid">
           <div class="metric-box"><strong>{category_score('claim:', len(CLAIM_DECISIONS))}</strong><span>Claims first pass</span></div>
           <div class="metric-box"><strong>{category_score('credit:', len(CREDIT_DECISIONS))}</strong><span>Credit first pass</span></div>
-          <div class="metric-box"><strong>{category_score('aging:', len(INVOICES))}</strong><span>Aging first pass</span></div>
+          <div class="metric-box"><strong>{category_score('aging:', len(AGING_DECISIONS))}</strong><span>Aging first pass</span></div>
           <div class="metric-box"><strong>{category_score('reporting:', len(REPORTING_DECISIONS))}</strong><span>Reporting first pass</span></div>
           <div class="metric-box"><strong>{category_score('management:', len(MANAGEMENT_DECISIONS))}</strong><span>Management first pass</span></div>
         </div>
@@ -813,9 +788,9 @@ def render_completion() -> None:
     st.markdown(
         """
         1. Identify the type of claim and when it arises.
-        2. Decide who should receive credit and under what conditions.
-        3. Monitor unpaid invoices with an aging schedule.
-        4. Estimate the allowance and calculate cash realizable value.
+        2. Evaluate how credit terms affect sales, cash timing, and collection risk.
+        3. Interpret the amounts, loss rates, and totals in a completed aging schedule.
+        4. Estimate the allowance and determine balance-sheet net realizable value after the bad debt adjustment.
         5. Apply authorized write-offs without changing the already estimated net receivables.
         6. Present receivables, bad debt expense, interest revenue, and collection risk clearly.
         7. Use turnover, collection period, customer analytics, discounts, and factoring to improve cash flow.
@@ -846,17 +821,18 @@ def render_management_stage() -> None:
 
     if result is None or not result["correct"]:
         if result is not None:
-            st.warning(f"Review the evidence and tradeoff. {result['explanation']}")
-            st.caption(f"Best response: {result['expected']}")
+            st.warning(escape_dollar_markdown(f"Review the evidence and tradeoff. {result['explanation']}"))
+            st.caption(escape_dollar_markdown(f"Best response: {result['expected']}"))
             render_effects(str(result["account_effect"]), str(result["statement_effect"]))
             st.info("Change your choice below, then check the revised management decision.")
         draft = st.session_state.rc_drafts["management"].get(item.id)
         options = shuffled(item.options, f"management-answer-order:{item.id}")
         widget_key = f"widget_management_{item.id}"
         selected = st.radio(
-            item.prompt,
+            escape_dollar_markdown(item.prompt),
             options,
             index=selected_index(options, draft),
+            format_func=escape_dollar_markdown,
             key=widget_key,
             on_change=save_simple_draft,
             args=("management", item.id, widget_key),
@@ -878,7 +854,7 @@ def render_management_stage() -> None:
                 )
                 st.rerun()
     else:
-        st.success(f"Sound decision. {result['explanation']}")
+        st.success(escape_dollar_markdown(f"Sound decision. {result['explanation']}"))
         render_effects(str(result["account_effect"]), str(result["statement_effect"]))
         label = "Finish the case" if index == len(MANAGEMENT_DECISIONS) - 1 else "Continue"
         st.button(

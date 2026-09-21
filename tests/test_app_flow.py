@@ -4,22 +4,57 @@ import unittest
 from streamlit.testing.v1 import AppTest
 
 from receivables_challenge.case_data import (
+    AGING_DECISIONS,
     CLAIM_DECISIONS,
     CREDIT_DECISIONS,
-    INVOICES,
     MANAGEMENT_DECISIONS,
     REPORTING_DECISIONS,
+    VALUATION_BENEFIT_CORRECT,
     VALUATION_FIELDS,
 )
 from receivables_challenge.engine import valuation_values
-from receivables_challenge.progress import SNAPSHOT_PARAM, decode_snapshot
+from receivables_challenge.progress import (
+    SNAPSHOT_PARAM,
+    activity_defaults,
+    decode_snapshot,
+    encode_state,
+)
 
 
 def button(app: AppTest, label: str):
     return next(item for item in app.button if item.label == label)
 
 
+def assert_feedback_dollars_are_escaped(test_case, app):
+    for collection in (app.success, app.warning, app.info, app.caption):
+        for item in collection:
+            test_case.assertIsNone(re.search(r"(?<!\\)\$", str(item.value)), item.value)
+
+
 class PerfectReceivablesFlowTests(unittest.TestCase):
+    def test_dollar_amounts_in_feedback_are_escaped(self):
+        state = activity_defaults()
+        state["rc_stage"] = 5
+        state["rc_claim_index"] = len(CLAIM_DECISIONS) - 1
+        state["rc_claim_responses"] = {item.id: item.correct for item in CLAIM_DECISIONS}
+        state["rc_credit_index"] = len(CREDIT_DECISIONS) - 1
+        state["rc_credit_responses"] = {item.id: item.correct for item in CREDIT_DECISIONS}
+        state["rc_aging_index"] = len(AGING_DECISIONS) - 1
+        state["rc_aging_responses"] = {item.id: item.correct for item in AGING_DECISIONS}
+        state["rc_valuation_responses"] = valuation_values()
+        state["rc_valuation_benefit"] = VALUATION_BENEFIT_CORRECT
+        state["rc_valuation_submitted"] = True
+
+        app = AppTest.from_file("streamlit_app.py", default_timeout=90)
+        app.query_params[SNAPSHOT_PARAM] = encode_state(state)
+        app.run()
+        item = REPORTING_DECISIONS[0]
+        wrong = next(option for option in item.options if option != item.correct)
+        app.radio(key=f"widget_reporting_{item.id}").set_value(wrong)
+        button(app, "Check the reporting decision").click().run()
+
+        assert_feedback_dollars_are_escaped(self, app)
+
     def test_draft_restores_and_wrong_answer_revises_in_one_check(self):
         app = AppTest.from_file("streamlit_app.py", default_timeout=90).run()
         button(app, "Open the receivables file").click().run()
@@ -52,18 +87,18 @@ class PerfectReceivablesFlowTests(unittest.TestCase):
 
         for item in CREDIT_DECISIONS:
             app.radio(key=f"widget_credit_{item.id}").set_value(item.correct)
-            button(app, "Evaluate the customer").click().run()
+            button(app, "Check the tradeoff").click().run()
             button(app, "Continue").click().run()
 
-        for invoice in INVOICES:
-            app.selectbox(key=f"widget_aging_{invoice.id}").set_value(invoice.correct_bucket)
-        button(app, "Check the aging schedule").click().run()
-        button(app, "Continue to valuation").click().run()
+        for item in AGING_DECISIONS:
+            app.radio(key=f"widget_aging_{item.id}").set_value(item.correct)
+            button(app, "Check the interpretation").click().run()
+            button(app, "Continue").click().run()
 
         expected = valuation_values()
         for key, _label in VALUATION_FIELDS:
             app.number_input(key=f"widget_valuation_{key}").set_value(expected[key])
-        app.radio(key="widget_valuation_method").set_value("Aging analysis")
+        app.radio(key="widget_valuation_benefit").set_value(VALUATION_BENEFIT_CORRECT)
         button(app, "Check the valuation").click().run()
         button(app, "Continue to reporting").click().run()
 

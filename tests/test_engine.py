@@ -1,6 +1,15 @@
 import unittest
 
-from receivables_challenge.case_data import AGING_BUCKETS, INVOICES
+from receivables_challenge.case_data import (
+    AGING_BUCKETS,
+    AGING_DECISIONS,
+    CREDIT_DECISIONS,
+    INVOICES,
+    MANAGEMENT_DECISIONS,
+    REPORTING_DECISIONS,
+    VALUATION_BENEFIT_CORRECT,
+    VALUATION_FIELDS,
+)
 from receivables_challenge.engine import (
     aging_totals,
     average_collection_period,
@@ -62,8 +71,20 @@ class ReceivablesEngineTests(unittest.TestCase):
     def test_aging_and_valuation_evaluation(self):
         aging = {invoice.id: invoice.correct_bucket for invoice in INVOICES}
         self.assertTrue(all(item["correct"] for item in evaluate_aging(aging).values()))
-        result = evaluate_valuation(valuation_values(), "Aging analysis")
+        result = evaluate_valuation(valuation_values(), VALUATION_BENEFIT_CORRECT)
         self.assertTrue(result["correct"])
+
+    def test_refined_learning_tasks_match_course_scope(self):
+        self.assertEqual(len(AGING_DECISIONS), 4)
+        self.assertTrue(all("credit decision" not in item.prompt.lower() for item in CREDIT_DECISIONS))
+        self.assertNotIn("writeoff_control", {item.id for item in REPORTING_DECISIONS})
+        bad_debt = next(item for item in REPORTING_DECISIONS if item.id == "bad_debt_location")
+        self.assertEqual(bad_debt.correct, "Operating expense")
+        balance_sheet = next(item for item in REPORTING_DECISIONS if item.id == "balance_sheet")
+        self.assertTrue(any("disclose the allowance only in the notes" in option for option in balance_sheet.options))
+        nrv_label = dict(VALUATION_FIELDS)["net_realizable_value"]
+        self.assertIn("balance sheet after the bad debt adjustment", nrv_label)
+        self.assertTrue(all("rounded" not in item.prompt.lower() for item in MANAGEMENT_DECISIONS))
 
 
 if __name__ == "__main__":

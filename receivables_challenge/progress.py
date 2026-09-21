@@ -10,22 +10,21 @@ from collections.abc import MutableMapping
 from typing import Any
 
 from receivables_challenge.case_data import (
-    AGING_BUCKETS,
+    AGING_DECISIONS,
     CLAIM_DECISIONS,
     CREDIT_DECISIONS,
-    INVOICES,
     MANAGEMENT_DECISIONS,
     REPORTING_DECISIONS,
+    VALUATION_BENEFIT_OPTIONS,
     VALUATION_FIELDS,
 )
 from receivables_challenge.engine import evaluate_valuation
 
 
 SNAPSHOT_PARAM = "progress"
-SNAPSHOT_VERSION = 2
+SNAPSHOT_VERSION = 3
 MAX_TOKEN_LENGTH = 16_000
 MAX_JSON_BYTES = 32_000
-VALUATION_METHODS = ("Percentage of receivables", "Aging analysis")
 
 
 def activity_defaults() -> dict[str, Any]:
@@ -44,10 +43,10 @@ def activity_defaults() -> dict[str, Any]:
         "rc_claim_responses": {},
         "rc_credit_index": 0,
         "rc_credit_responses": {},
+        "rc_aging_index": 0,
         "rc_aging_responses": {},
-        "rc_aging_submitted": False,
         "rc_valuation_responses": {},
-        "rc_valuation_method": "",
+        "rc_valuation_benefit": "",
         "rc_valuation_submitted": False,
         "rc_reporting_index": 0,
         "rc_reporting_responses": {},
@@ -99,22 +98,6 @@ def _answer_prefix(raw: object, items) -> dict[str, str]:
     return normalized
 
 
-def _validate_aging(raw: object, submitted: bool) -> dict[str, str]:
-    if not isinstance(raw, dict):
-        raise ValueError("Aging answers must be an object")
-    ids = {invoice.id for invoice in INVOICES}
-    if set(raw) - ids:
-        raise ValueError("Unknown invoice")
-    if submitted and set(raw) != ids:
-        raise ValueError("Submitted aging schedule is incomplete")
-    normalized = {}
-    for key, value in raw.items():
-        if not isinstance(value, str) or value not in AGING_BUCKETS:
-            raise ValueError("Unknown aging category")
-        normalized[key] = value
-    return normalized
-
-
 def _validate_valuation(raw: object, submitted: bool) -> dict[str, int]:
     if not isinstance(raw, dict):
         raise ValueError("Valuation answers must be an object")
@@ -153,13 +136,13 @@ def _validate_valuation_draft(raw: object) -> dict[str, int | str]:
     if not isinstance(raw, dict):
         raise ValueError("Valuation draft must be an object")
     field_keys = {key for key, _label in VALUATION_FIELDS}
-    if set(raw) - (field_keys | {"method"}):
+    if set(raw) - (field_keys | {"benefit"}):
         raise ValueError("Unknown valuation draft field")
     normalized: dict[str, int | str] = {}
     for key, value in raw.items():
-        if key == "method":
-            if not isinstance(value, str) or value not in VALUATION_METHODS:
-                raise ValueError("Invalid valuation method draft")
+        if key == "benefit":
+            if not isinstance(value, str) or value not in VALUATION_BENEFIT_OPTIONS:
+                raise ValueError("Invalid valuation benefit draft")
             normalized[key] = value
         else:
             if type(value) is not int or not 0 <= value <= 10_000_000:
@@ -171,9 +154,9 @@ def _validate_valuation_draft(raw: object) -> dict[str, int | str]:
 def _valid_score_keys() -> set[str]:
     keys = {f"claim:{item.id}" for item in CLAIM_DECISIONS}
     keys |= {f"credit:{item.id}" for item in CREDIT_DECISIONS}
-    keys |= {f"aging:{invoice.id}" for invoice in INVOICES}
+    keys |= {f"aging:{item.id}" for item in AGING_DECISIONS}
     keys |= {f"valuation:{key}" for key, _label in VALUATION_FIELDS}
-    keys.add("valuation:method")
+    keys.add("valuation:benefit")
     keys |= {f"reporting:{item.id}" for item in REPORTING_DECISIONS}
     keys |= {f"management:{item.id}" for item in MANAGEMENT_DECISIONS}
     return keys
@@ -185,7 +168,7 @@ def _all_correct(responses: dict[str, str], items) -> bool:
 
 def validate_snapshot(raw: object) -> dict[str, Any]:
     expected_keys = {
-        "v", "s", "z", "d", "ci", "cr", "di", "dr", "ar", "as", "vr", "vm", "vs",
+        "v", "s", "z", "d", "ci", "cr", "di", "dr", "ai", "ar", "vr", "vb", "vs",
         "ri", "rr", "mi", "mr", "at", "fp",
     }
     if not isinstance(raw, dict) or set(raw) != expected_keys or raw["v"] != SNAPSHOT_VERSION:
@@ -200,11 +183,13 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
 
     claim_index = _require_index(raw["ci"], len(CLAIM_DECISIONS))
     credit_index = _require_index(raw["di"], len(CREDIT_DECISIONS))
+    aging_index = _require_index(raw["ai"], len(AGING_DECISIONS))
     reporting_index = _require_index(raw["ri"], len(REPORTING_DECISIONS))
     management_index = _require_index(raw["mi"], len(MANAGEMENT_DECISIONS))
 
     claims = _answer_prefix(raw["cr"], CLAIM_DECISIONS)
     credits = _answer_prefix(raw["dr"], CREDIT_DECISIONS)
+    aging = _answer_prefix(raw["ar"], AGING_DECISIONS)
     reporting = _answer_prefix(raw["rr"], REPORTING_DECISIONS)
     management = _answer_prefix(raw["mr"], MANAGEMENT_DECISIONS)
 
@@ -214,7 +199,7 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
     drafts = {
         "claims": _validate_simple_draft(raw_drafts["c"], CLAIM_DECISIONS, claim_index),
         "credit": _validate_simple_draft(raw_drafts["d"], CREDIT_DECISIONS, credit_index),
-        "aging": _validate_aging(raw_drafts["a"], False),
+        "aging": _validate_simple_draft(raw_drafts["a"], AGING_DECISIONS, aging_index),
         "valuation": _validate_valuation_draft(raw_drafts["v"]),
         "reporting": _validate_simple_draft(raw_drafts["r"], REPORTING_DECISIONS, reporting_index),
         "management": _validate_simple_draft(raw_drafts["m"], MANAGEMENT_DECISIONS, management_index),
@@ -224,17 +209,15 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
         if stage < minimum_stage and drafts[group]:
             raise ValueError("Future draft is not allowed")
 
-    aging_submitted = raw["as"]
     valuation_submitted = raw["vs"]
-    if type(aging_submitted) is not bool or type(valuation_submitted) is not bool:
+    if type(valuation_submitted) is not bool:
         raise ValueError("Invalid submission status")
-    aging = _validate_aging(raw["ar"], aging_submitted)
     valuation = _validate_valuation(raw["vr"], valuation_submitted)
-    method = raw["vm"]
-    if not isinstance(method, str) or method not in ("", *VALUATION_METHODS):
-        raise ValueError("Invalid valuation method")
-    if valuation_submitted and method not in VALUATION_METHODS:
-        raise ValueError("Submitted valuation method is missing")
+    benefit = raw["vb"]
+    if not isinstance(benefit, str) or benefit not in ("", *VALUATION_BENEFIT_OPTIONS):
+        raise ValueError("Invalid valuation benefit")
+    if valuation_submitted and benefit not in VALUATION_BENEFIT_OPTIONS:
+        raise ValueError("Submitted valuation benefit is missing")
 
     if not isinstance(raw["at"], dict) or not isinstance(raw["fp"], dict):
         raise ValueError("Invalid score history")
@@ -254,9 +237,9 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
         raise ValueError("Briefing cannot contain activity answers")
     if stage < 2 and credits:
         raise ValueError("Credit decisions appear too early")
-    if stage < 3 and (aging or aging_submitted):
+    if stage < 3 and aging:
         raise ValueError("Aging work appears too early")
-    if stage < 4 and (valuation or method or valuation_submitted):
+    if stage < 4 and (valuation or benefit or valuation_submitted):
         raise ValueError("Valuation work appears too early")
     if stage < 5 and reporting:
         raise ValueError("Reporting decisions appear too early")
@@ -267,11 +250,10 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
         raise ValueError("Claims stage is incomplete")
     if stage >= 3 and not _all_correct(credits, CREDIT_DECISIONS):
         raise ValueError("Credit stage is incomplete")
-    if stage >= 4:
-        if not aging_submitted or any(aging.get(invoice.id) != invoice.correct_bucket for invoice in INVOICES):
-            raise ValueError("Aging stage is unresolved")
+    if stage >= 4 and not _all_correct(aging, AGING_DECISIONS):
+        raise ValueError("Aging stage is unresolved")
     if stage >= 5:
-        valuation_result = evaluate_valuation(valuation, method)
+        valuation_result = evaluate_valuation(valuation, benefit)
         if not valuation_submitted or not valuation_result["correct"]:
             raise ValueError("Valuation stage is unresolved")
     if stage >= 6 and not _all_correct(reporting, REPORTING_DECISIONS):
@@ -285,6 +267,9 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
     for item in CREDIT_DECISIONS[:credit_index]:
         if credits.get(item.id) != item.correct:
             raise ValueError("A prior credit answer is unresolved")
+    for item in AGING_DECISIONS[:aging_index]:
+        if aging.get(item.id) != item.correct:
+            raise ValueError("A prior aging answer is unresolved")
     for item in REPORTING_DECISIONS[:reporting_index]:
         if reporting.get(item.id) != item.correct:
             raise ValueError("A prior reporting answer is unresolved")
@@ -300,6 +285,10 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
         raise ValueError("Credit position is inconsistent")
     if stage >= 3 and credit_index != len(CREDIT_DECISIONS) - 1:
         raise ValueError("Completed credit position is invalid")
+    if stage == 3 and len(aging) not in {aging_index, aging_index + 1}:
+        raise ValueError("Aging position is inconsistent")
+    if stage >= 4 and aging_index != len(AGING_DECISIONS) - 1:
+        raise ValueError("Completed aging position is invalid")
     if stage == 5 and len(reporting) not in {reporting_index, reporting_index + 1}:
         raise ValueError("Reporting position is inconsistent")
     if stage >= 6 and reporting_index != len(REPORTING_DECISIONS) - 1:
@@ -317,10 +306,10 @@ def validate_snapshot(raw: object) -> dict[str, Any]:
         "rc_claim_responses": claims,
         "rc_credit_index": credit_index,
         "rc_credit_responses": credits,
+        "rc_aging_index": aging_index,
         "rc_aging_responses": aging,
-        "rc_aging_submitted": aging_submitted,
         "rc_valuation_responses": valuation,
-        "rc_valuation_method": method,
+        "rc_valuation_benefit": benefit,
         "rc_valuation_submitted": valuation_submitted,
         "rc_reporting_index": reporting_index,
         "rc_reporting_responses": reporting,
@@ -348,10 +337,10 @@ def snapshot_from_state(state: MutableMapping[str, Any]) -> dict[str, Any]:
         "cr": state["rc_claim_responses"],
         "di": state["rc_credit_index"],
         "dr": state["rc_credit_responses"],
+        "ai": state["rc_aging_index"],
         "ar": state["rc_aging_responses"],
-        "as": state["rc_aging_submitted"],
         "vr": state["rc_valuation_responses"],
-        "vm": state["rc_valuation_method"],
+        "vb": state["rc_valuation_benefit"],
         "vs": state["rc_valuation_submitted"],
         "ri": state["rc_reporting_index"],
         "rr": state["rc_reporting_responses"],

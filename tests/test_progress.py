@@ -4,11 +4,12 @@ import unittest
 import zlib
 
 from receivables_challenge.case_data import (
+    AGING_DECISIONS,
     CLAIM_DECISIONS,
     CREDIT_DECISIONS,
-    INVOICES,
     MANAGEMENT_DECISIONS,
     REPORTING_DECISIONS,
+    VALUATION_BENEFIT_CORRECT,
 )
 from receivables_challenge.engine import valuation_values
 from receivables_challenge.progress import (
@@ -36,10 +37,10 @@ def completed_state():
     state["rc_claim_responses"] = {item.id: item.correct for item in CLAIM_DECISIONS}
     state["rc_credit_index"] = len(CREDIT_DECISIONS) - 1
     state["rc_credit_responses"] = {item.id: item.correct for item in CREDIT_DECISIONS}
-    state["rc_aging_responses"] = {invoice.id: invoice.correct_bucket for invoice in INVOICES}
-    state["rc_aging_submitted"] = True
+    state["rc_aging_index"] = len(AGING_DECISIONS) - 1
+    state["rc_aging_responses"] = {item.id: item.correct for item in AGING_DECISIONS}
     state["rc_valuation_responses"] = valuation_values()
-    state["rc_valuation_method"] = "Aging analysis"
+    state["rc_valuation_benefit"] = VALUATION_BENEFIT_CORRECT
     state["rc_valuation_submitted"] = True
     state["rc_reporting_index"] = len(REPORTING_DECISIONS) - 1
     state["rc_reporting_responses"] = {item.id: item.correct for item in REPORTING_DECISIONS}
@@ -89,18 +90,18 @@ class ProgressSnapshotTests(unittest.TestCase):
         state["rc_claim_responses"] = {item.id: item.correct for item in CLAIM_DECISIONS}
         state["rc_credit_index"] = len(CREDIT_DECISIONS) - 1
         state["rc_credit_responses"] = {item.id: item.correct for item in CREDIT_DECISIONS}
-        state["rc_aging_responses"] = {invoice.id: invoice.correct_bucket for invoice in INVOICES}
-        state["rc_aging_submitted"] = True
+        state["rc_aging_index"] = len(AGING_DECISIONS) - 1
+        state["rc_aging_responses"] = {item.id: item.correct for item in AGING_DECISIONS}
         state["rc_drafts"]["valuation"] = {
             "ending_allowance": 22_180,
-            "method": "Aging analysis",
+            "benefit": VALUATION_BENEFIT_CORRECT,
         }
 
         restored = decode_snapshot(encode_state(state))
 
         self.assertIsNotNone(restored)
         self.assertEqual(restored["rc_drafts"]["valuation"]["ending_allowance"], 22_180)
-        self.assertEqual(restored["rc_drafts"]["valuation"]["method"], "Aging analysis")
+        self.assertEqual(restored["rc_drafts"]["valuation"]["benefit"], VALUATION_BENEFIT_CORRECT)
 
     def test_future_draft_is_rejected(self):
         state = activity_defaults()
