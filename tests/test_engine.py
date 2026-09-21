@@ -1,3 +1,4 @@
+import re
 import unittest
 
 from receivables_challenge.case_data import (
@@ -80,11 +81,37 @@ class ReceivablesEngineTests(unittest.TestCase):
         self.assertNotIn("writeoff_control", {item.id for item in REPORTING_DECISIONS})
         bad_debt = next(item for item in REPORTING_DECISIONS if item.id == "bad_debt_location")
         self.assertEqual(bad_debt.correct, "Operating expense")
+        self.assertEqual(
+            set(bad_debt.options),
+            {"Operating expense", "Cost of goods sold", "Other expense outside operating income"},
+        )
+        interest = next(item for item in REPORTING_DECISIONS if item.id == "interest_location")
+        self.assertEqual(
+            set(interest.options),
+            {"Sales revenue", "Other revenues and gains outside operating income", "Operating expense"},
+        )
         balance_sheet = next(item for item in REPORTING_DECISIONS if item.id == "balance_sheet")
-        self.assertTrue(any("disclose the allowance only in the notes" in option for option in balance_sheet.options))
+        self.assertTrue(any("disclose the allowance in the notes" in option for option in balance_sheet.options))
         nrv_label = dict(VALUATION_FIELDS)["net_realizable_value"]
         self.assertIn("balance sheet after the bad debt adjustment", nrv_label)
         self.assertTrue(all("rounded" not in item.prompt.lower() for item in MANAGEMENT_DECISIONS))
+        student_copy = " ".join(
+            value
+            for collection in (CREDIT_DECISIONS, AGING_DECISIONS, REPORTING_DECISIONS, MANAGEMENT_DECISIONS)
+            for item in collection
+            for value in (
+                item.document,
+                item.title,
+                item.story,
+                item.prompt,
+                *item.options,
+                item.explanation,
+                item.account_effect,
+                item.statement_effect,
+            )
+        ).lower()
+        for absolute in ("always", "never", "only"):
+            self.assertIsNone(re.search(rf"\b{absolute}\b", student_copy))
 
 
 if __name__ == "__main__":

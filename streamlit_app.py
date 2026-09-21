@@ -581,9 +581,21 @@ def render_valuation_stage() -> None:
     st.markdown('<div class="eyebrow">Step 4 of the receivables chain</div>', unsafe_allow_html=True)
     st.header("Determine the balance-sheet net realizable value")
     st.write("Use the aging result to determine the required allowance, the related account increases, and the net realizable value reported after the bad debt adjustment.")
+
+    display_rows = []
+    for row in aging_allowance_rows():
+        display_rows.append(
+            {
+                "Age category": row["Age category"],
+                "Receivables": format_currency(int(row["Receivables"])),
+                "Estimated loss rate": f"{float(row['Estimated loss rate']):.0%}",
+                "Estimated uncollectible": format_currency(int(row["Estimated uncollectible"])),
+            }
+        )
+    st.dataframe(display_rows, width="stretch", hide_index=True)
     st.markdown(
         f"""
-        <div class="formula"><strong>Starting point from the completed schedule:</strong> Gross Accounts Receivable is {format_currency(gross_accounts_receivable())}; the required ending Allowance is {format_currency(valuation_values()['ending_allowance'])}; and the unadjusted Allowance balance is {format_currency(BEGINNING_ALLOWANCE)}.</div>
+        <div class="formula"><strong>Starting point:</strong> Gross Accounts Receivable is {format_currency(gross_accounts_receivable())}. The Allowance currently has an unadjusted balance of {format_currency(BEGINNING_ALLOWANCE)} before the aging estimate is applied.</div>
         """,
         unsafe_allow_html=True,
     )
@@ -796,15 +808,27 @@ def render_completion() -> None:
         7. Use turnover, collection period, customer analytics, discounts, and factoring to improve cash flow.
         """
     )
-    st.subheader("Debrief with your team")
-    st.markdown(
-        """
-        - Why did the aging analysis produce a larger allowance than the simple percentage estimate?
-        - Why did the specific write-off not change net Accounts Receivable?
-        - Which management action would improve cash fastest, and what would it cost?
-        - Why would denying credit to every customer be a poor solution even if it eliminated collection risk?
-        """
-    )
+    st.subheader("Discuss with your team")
+    with st.expander("Why did the aging analysis produce a larger allowance than the simple percentage estimate?"):
+        st.write(
+            "The receivables are concentrated in older age groups, and aging applies higher estimated loss rates to those balances. "
+            "A single percentage does not reflect those differences in collection risk."
+        )
+    with st.expander("Why did the specific write-off not change net Accounts Receivable?"):
+        st.write(
+            "Gross Accounts Receivable and the Allowance for Doubtful Accounts decreased by the same amount. "
+            "Because both sides of the net calculation fell equally, net Accounts Receivable stayed the same."
+        )
+    with st.expander("Which management action would improve cash fastest, and what would it cost?"):
+        st.write(
+            "Selling selected receivables to a factor would produce cash immediately. The company would incur a factoring cost, "
+            "so the cash received and income would be lower than if customers paid the full balances."
+        )
+    with st.expander("Why would denying credit to every customer be a poor solution even if it eliminated collection risk?"):
+        st.write(
+            "It could prevent profitable credit sales and push dependable customers toward competitors. A balanced policy can support sales "
+            "while using screening, monitoring, and collection follow-up to manage risk."
+        )
 
 
 def render_management_stage() -> None:

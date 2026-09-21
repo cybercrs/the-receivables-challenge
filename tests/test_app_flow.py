@@ -95,6 +95,15 @@ class PerfectReceivablesFlowTests(unittest.TestCase):
             button(app, "Check the interpretation").click().run()
             button(app, "Continue").click().run()
 
+        self.assertEqual(len(app.dataframe), 1)
+        valuation_schedule = app.dataframe[0].value
+        self.assertEqual(len(valuation_schedule), 5)
+        self.assertNotIn("Total", valuation_schedule["Age category"].tolist())
+        self.assertTrue(
+            all("$22,180" not in str(item.value) for item in app.markdown),
+            "Step 4 should require students to total the aging estimates.",
+        )
+
         expected = valuation_values()
         for key, _label in VALUATION_FIELDS:
             app.number_input(key=f"widget_valuation_{key}").set_value(expected[key])
@@ -116,6 +125,8 @@ class PerfectReceivablesFlowTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertTrue(any("Case complete" in item.value for item in app.success))
         self.assertIn("final mastery: complete", "\n".join(item.value for item in app.caption).lower())
+        self.assertEqual(len(app.expander), 4)
+        self.assertTrue(all(item.label.endswith("?") for item in app.expander))
 
         rendered = "\n".join(item.value for item in app.markdown).lower()
         self.assertNotIn("chapter 8", rendered)
