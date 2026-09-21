@@ -482,8 +482,8 @@ MANAGEMENT_DECISIONS = (
         prompt="What additional information would be most useful before the team contacts customers?",
         options=(
             "Customer-by-customer aging details and recent payment history",
-            "The total number of employees in every operating department",
-            "The company's cash sales for the year with no customer detail",
+            "Customer profitability and expected future sales without invoice-aging details",
+            "A companywide cash forecast and next month's sales budget without customer-level balances",
         ),
         correct="Customer-by-customer aging details and recent payment history",
         explanation="Aging and customer-level detail help management target the balances most likely to delay cash or become uncollectible.",

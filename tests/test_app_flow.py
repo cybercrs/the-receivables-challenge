@@ -109,6 +109,10 @@ class PerfectReceivablesFlowTests(unittest.TestCase):
             app.number_input(key=f"widget_valuation_{key}").set_value(expected[key])
         app.radio(key="widget_valuation_benefit").set_value(VALUATION_BENEFIT_CORRECT)
         button(app, "Check the valuation").click().run()
+        comparison_text = "\n".join(item.value for item in app.caption)
+        self.assertIn("9,440", comparison_text)
+        self.assertIn("22,180", comparison_text)
+        self.assertIn("8%", comparison_text)
         button(app, "Continue to reporting").click().run()
 
         for item in REPORTING_DECISIONS:
@@ -127,6 +131,9 @@ class PerfectReceivablesFlowTests(unittest.TestCase):
         self.assertIn("final mastery: complete", "\n".join(item.value for item in app.caption).lower())
         self.assertEqual(len(app.expander), 4)
         self.assertTrue(all(item.label.endswith("?") for item in app.expander))
+        self.assertIn("22,180", app.expander[0].label)
+        self.assertIn("9,440", app.expander[0].label)
+        self.assertIn("8%", app.expander[0].label)
 
         rendered = "\n".join(item.value for item in app.markdown).lower()
         self.assertNotIn("chapter 8", rendered)

@@ -15,6 +15,7 @@ from receivables_challenge.case_data import (
     COMPANY_NAME,
     CREDIT_DECISIONS,
     MANAGEMENT_DECISIONS,
+    PERCENTAGE_OF_RECEIVABLES_RATE,
     REPORTING_DATE,
     REPORTING_DECISIONS,
     VALUATION_BENEFIT_OPTIONS,
@@ -27,6 +28,7 @@ from receivables_challenge.engine import (
     evaluate_valuation,
     format_currency,
     gross_accounts_receivable,
+    percentage_of_receivables_estimate,
     valuation_values,
     writeoff_comparison,
 )
@@ -628,6 +630,14 @@ def render_valuation_stage() -> None:
                 """,
                 unsafe_allow_html=True,
             )
+            st.caption(
+                escape_dollar_markdown(
+                    f"Method comparison: the percentage-of-receivables estimate is "
+                    f"{format_currency(gross_accounts_receivable())} x {PERCENTAGE_OF_RECEIVABLES_RATE:.0%} "
+                    f"= {format_currency(percentage_of_receivables_estimate())}. The aging estimate is the sum of the "
+                    f"age-group estimates, {format_currency(expected['ending_allowance'])}."
+                )
+            )
             st.button("Continue to reporting", type="primary", width="stretch", on_click=set_stage, args=(5,))
         else:
             st.warning("Some amounts or the conceptual response need revision. Follow the allowance from its current balance to its required ending balance, then determine balance-sheet net realizable value.")
@@ -809,10 +819,16 @@ def render_completion() -> None:
         """
     )
     st.subheader("Discuss with your team")
-    with st.expander("Why did the aging analysis produce a larger allowance than the simple percentage estimate?"):
+    comparison_question = escape_dollar_markdown(
+        f"Why did aging produce a {format_currency(valuation_values()['ending_allowance'])} allowance estimate, "
+        f"compared with {format_currency(percentage_of_receivables_estimate())} using "
+        f"{PERCENTAGE_OF_RECEIVABLES_RATE:.0%} of {format_currency(gross_accounts_receivable())} gross receivables?"
+    )
+    with st.expander(comparison_question):
         st.write(
-            "The receivables are concentrated in older age groups, and aging applies higher estimated loss rates to those balances. "
-            "A single percentage does not reflect those differences in collection risk."
+            "The aging calculation applies different estimated loss rates to each age group, including higher rates for older balances. "
+            "The simple percentage calculation applies the same 8% rate to the entire gross receivables balance, so it does not reflect "
+            "the concentration of receivables in higher-risk age groups."
         )
     with st.expander("Why did the specific write-off not change net Accounts Receivable?"):
         st.write(

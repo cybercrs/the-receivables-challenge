@@ -95,6 +95,15 @@ class ReceivablesEngineTests(unittest.TestCase):
         nrv_label = dict(VALUATION_FIELDS)["net_realizable_value"]
         self.assertIn("balance sheet after the bad debt adjustment", nrv_label)
         self.assertTrue(all("rounded" not in item.prompt.lower() for item in MANAGEMENT_DECISIONS))
+        dashboard_detail = next(item for item in MANAGEMENT_DECISIONS if item.id == "dashboard_focus")
+        self.assertEqual(
+            set(dashboard_detail.options),
+            {
+                "Customer-by-customer aging details and recent payment history",
+                "Customer profitability and expected future sales without invoice-aging details",
+                "A companywide cash forecast and next month's sales budget without customer-level balances",
+            },
+        )
         student_copy = " ".join(
             value
             for collection in (CREDIT_DECISIONS, AGING_DECISIONS, REPORTING_DECISIONS, MANAGEMENT_DECISIONS)
