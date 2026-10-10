@@ -1,0 +1,41 @@
+test_complete_case_reaches_debrief_with_allowed_reasoning (test_app_flow.PerfectReceivablesFlowTests.test_complete_case_reaches_debrief_with_allowed_reasoning) ... 2026-10-10 15:55:50.696 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_dollar_amounts_in_feedback_are_escaped (test_app_flow.PerfectReceivablesFlowTests.test_dollar_amounts_in_feedback_are_escaped) ... 2026-10-10 15:55:55.850 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_draft_restores_and_wrong_answer_revises_in_one_check (test_app_flow.PerfectReceivablesFlowTests.test_draft_restores_and_wrong_answer_revises_in_one_check) ... 2026-10-10 15:55:56.202 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_complete_case_reaches_debrief_with_allowed_reasoning (test_browser_flow.PerfectReceivablesFlowTests.test_complete_case_reaches_debrief_with_allowed_reasoning) ... 2026-10-10 15:55:56.744 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_dollar_amounts_in_feedback_are_escaped (test_browser_flow.PerfectReceivablesFlowTests.test_dollar_amounts_in_feedback_are_escaped) ... 2026-10-10 15:55:58.750 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_draft_restores_and_wrong_answer_revises_in_one_check (test_browser_flow.PerfectReceivablesFlowTests.test_draft_restores_and_wrong_answer_revises_in_one_check) ... 2026-10-10 15:55:59.063 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_navigation_and_advance_reject_locked_future_and_review_mutation (test_browser_navigation.BrowserNavigationTests.test_navigation_and_advance_reject_locked_future_and_review_mutation) ... 2026-10-10 15:55:59.260 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_review_preserves_earned_progress_and_current_draft (test_browser_navigation.BrowserNavigationTests.test_review_preserves_earned_progress_and_current_draft) ... 2026-10-10 15:55:59.353 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 15:55:59.834 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 15:56:00.005 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-10 15:56:00.135 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_aging_and_valuation_evaluation (test_engine.ReceivablesEngineTests.test_aging_and_valuation_evaluation) ... ok
+test_aging_estimate_and_account_increases (test_engine.ReceivablesEngineTests.test_aging_estimate_and_account_increases) ... ok
+test_aging_schedule_reconciles_to_gross_receivables (test_engine.ReceivablesEngineTests.test_aging_schedule_reconciles_to_gross_receivables) ... ok
+test_decision_evaluation_includes_both_effects (test_engine.ReceivablesEngineTests.test_decision_evaluation_includes_both_effects) ... ok
+test_liquidity_metrics (test_engine.ReceivablesEngineTests.test_liquidity_metrics) ... ok
+test_refined_learning_tasks_match_course_scope (test_engine.ReceivablesEngineTests.test_refined_learning_tasks_match_course_scope) ... ok
+test_specific_writeoff_preserves_net_realizable_value (test_engine.ReceivablesEngineTests.test_specific_writeoff_preserves_net_realizable_value) ... ok
+test_current_incorrect_answer_can_be_restored_for_revision (test_progress.ProgressSnapshotTests.test_current_incorrect_answer_can_be_restored_for_revision) ... ok
+test_future_draft_is_rejected (test_progress.ProgressSnapshotTests.test_future_draft_is_rejected) ... ok
+test_malformed_and_oversized_tokens_are_rejected (test_progress.ProgressSnapshotTests.test_malformed_and_oversized_tokens_are_rejected) ... ok
+test_partial_valuation_draft_survives_refresh (test_progress.ProgressSnapshotTests.test_partial_valuation_draft_survives_refresh) ... ok
+test_restore_reset_and_score_summary (test_progress.ProgressSnapshotTests.test_restore_reset_and_score_summary) ... ok
+test_round_trip_completed_progress (test_progress.ProgressSnapshotTests.test_round_trip_completed_progress) ... ok
+test_skipped_stage_is_rejected (test_progress.ProgressSnapshotTests.test_skipped_stage_is_rejected) ... ok
+test_tampered_completed_valuation_is_rejected (test_progress.ProgressSnapshotTests.test_tampered_completed_valuation_is_rejected) ... ok
+test_unknown_snapshot_keys_are_rejected (test_progress.ProgressSnapshotTests.test_unknown_snapshot_keys_are_rejected) ... ok
+test_unsubmitted_draft_and_shuffle_seed_survive_refresh (test_progress.ProgressSnapshotTests.test_unsubmitted_draft_and_shuffle_seed_survive_refresh) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 9.568s
+
+OK

@@ -2,3 +2,7 @@
 .venv/
 __pycache__/
 *.pyc
+
+# Isolated browser builds and local test scratch
+browser/dist/
+browser/test-results/
