@@ -18,5 +18,7 @@
   },
   "application_bytes": 204774,
   "runtime_dependencies": [],
-  "entrypoint": "index.html"
+  "entrypoint": "index.html",
+  "canonical_directory": "js/",
+  "removed_legacy_directory": "native-pilot/"
 }
