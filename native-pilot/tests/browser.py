@@ -351,6 +351,8 @@ def main():
                     download = download_event.value
                     download.save_as(str(OUT / "valuation-table.csv"))
                     csv = (OUT / "valuation-table.csv").read_text()
+                    # Keep downloaded data exact while normalizing review-artifact newlines for Git.
+                    (OUT / "valuation-table.csv").write_text(csv)
                     assert "Measure" in csv and "More than 90 days past due" in csv
                     assert (
                         csv.count("\n") == 4 and "Total" in csv and "[4] $22,180" in csv
@@ -443,6 +445,8 @@ def main():
                     with page.expect_download() as event:
                         click(page, "Download table as CSV")
                     event.value.save_as(str(OUT / "review-table.csv"))
+                    evidence = OUT / "review-table.csv"
+                    evidence.write_text(evidence.read_text())
                     assert state(page)[0] == completed
             for position in range(1, 25):
                 click(page, "Forward")
