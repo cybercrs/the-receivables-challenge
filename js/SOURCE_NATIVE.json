@@ -1,13 +1,13 @@
 {
   "repository": "cybercrs/the-receivables-challenge",
   "source_branch": "pilot/native-receivables",
-  "source_commit": "d8130a23f7d5e079ed3de9654362ca32437d4622",
+  "source_commit": "a9dd736614db779b75389222ed8c251dc4d8db8f",
   "original_static_commit": "9d5b351b2c06919b0675906e0b3c5b56f108d62b",
-  "preview_directory": "js/",
-  "publication_status": "native public preview",
-  "previous_static_commit": "1102aea01fed5324f7683a745d85a068081a195f",
-  "native_revision": "2026-10-14-js-url",
+  "publication_status": "student-facing native JavaScript app",
+  "previous_static_commit": "496d1bf782b2e78709affff0093a60a16a0ac0b3",
+  "native_revision": "2026-10-14-final-student-branding",
   "scored_checkpoints": 26,
   "former_preview_directory": "native-pilot/",
-  "legacy_route": "removed without redirect"
+  "legacy_route": "removed without redirect",
+  "public_directory": "js/"
 }
