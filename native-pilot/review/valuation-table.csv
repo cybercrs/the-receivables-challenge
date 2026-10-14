@@ -1,0 +1,6 @@
+"Age category","Receivables","Estimated loss rate","Estimated uncollectible"
+"More than 90 days past due","$14,000","100%","$14,000"
+"Current","$36,000","1%","$360"
+"61-90 days past due","$18,000","25%","$4,500"
+"31-60 days past due","$22,000","10%","$2,200"
+"1-30 days past due","$28,000","4%","$1,120"

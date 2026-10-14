@@ -1,0 +1,11 @@
+{
+  "source": "81f1411b256f635b7c31698b81a32c68b91ca4fa",
+  "choice_decisions": 22,
+  "pages": 25,
+  "screen_variants": 75,
+  "app_owned_assets": [],
+  "generated_sha256": {
+    "content.js": "5c01bfdcad232f7ccac1b0791334e002bdbdcae50d74995968909ace8d4f99ae",
+    "original.css": "b12e08780660a3ba5fb9e13b8b2df3e7e40276c026b571dbbabaf1823ed7d4bc"
+  }
+}

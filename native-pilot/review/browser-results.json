@@ -1,0 +1,118 @@
+{
+  "checks": [
+    {
+      "name": "Native initialization, anonymous Python-compatible progress, desktop navigation",
+      "status": "passed"
+    },
+    {
+      "name": "Missing and repeated wrong answers, refresh, original reveal/revision scoring, immutable and keyboard review",
+      "status": "passed"
+    },
+    {
+      "name": "Unsubmitted drafts, exact stable option order, read-only bookmarks and future-view clamping",
+      "status": "passed"
+    },
+    {
+      "name": "Whole-dollar validation, invalid and formatted numeric draft resume, calculation gates, unchanged rechecks and table CSV",
+      "status": "passed"
+    },
+    {
+      "name": "Complete 25-page lesson, all 22 choices, original write-off balances, category scores and four debrief disclosures",
+      "status": "passed"
+    },
+    {
+      "name": "Full immutable backward/forward traversal, review-only CSV, narrow layout and usable touch targets",
+      "status": "passed"
+    },
+    {
+      "name": "Independent tabs and contexts, reset/refresh, invalid snapshot rejection, original 63-bit bookmark compatibility",
+      "status": "passed"
+    },
+    {
+      "name": "Five measured cold native initializations; no runtime installation, external requests, console errors or execution errors",
+      "status": "passed"
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "external_requests": [],
+  "cold_initializations": [
+    {
+      "ready_from_navigation_ms": 79.29999999981374,
+      "automation_wall_ms": 117.30082599979141,
+      "browser_resource_bytes": 200634
+    },
+    {
+      "ready_from_navigation_ms": 88.89999999990687,
+      "automation_wall_ms": 133.3738890002678,
+      "browser_resource_bytes": 200634
+    },
+    {
+      "ready_from_navigation_ms": 86.39999999990687,
+      "automation_wall_ms": 128.90049799989356,
+      "browser_resource_bytes": 200634
+    },
+    {
+      "ready_from_navigation_ms": 81.39999999990687,
+      "automation_wall_ms": 116.78906899987851,
+      "browser_resource_bytes": 200634
+    },
+    {
+      "ready_from_navigation_ms": 91.10000000009313,
+      "automation_wall_ms": 136.15247799998542,
+      "browser_resource_bytes": 200634
+    }
+  ],
+  "layout": {
+    "desktop": [
+      {
+        "x": 1102,
+        "y": 267.921875,
+        "width": 44,
+        "height": 44
+      },
+      {
+        "x": 1154,
+        "y": 267.921875,
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "narrow": [
+      {
+        "x": 278,
+        "y": 313.59375,
+        "width": 44,
+        "height": 44
+      },
+      {
+        "x": 330,
+        "y": 313.59375,
+        "width": 44,
+        "height": 44
+      }
+    ]
+  },
+  "score": {
+    "correct": 22,
+    "attempted": 27,
+    "total": 27,
+    "revisions": 6
+  },
+  "cold_summary_ms": {
+    "median": 86.39999999990687,
+    "min": 79.29999999981374,
+    "max": 91.10000000009313
+  },
+  "measurement_scope": "Five cache-disabled fresh Chromium contexts on local loopback in the saved cloud environment; not school-network, hosted HTTPS, device or classroom-load measurements.",
+  "package_bytes": {
+    "index.html": 1980,
+    "original.css": 6131,
+    "style.css": 5197,
+    "content.js": 156974,
+    "engine.js": 17352,
+    "app.js": 14980
+  },
+  "package_total_bytes": 202614,
+  "status": "passed"
+}

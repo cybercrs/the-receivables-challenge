@@ -6,3 +6,6 @@ __pycache__/
 # Isolated browser builds and local test scratch
 browser/dist/
 browser/test-results/
+
+# Native pilot build output
+native-pilot/dist/

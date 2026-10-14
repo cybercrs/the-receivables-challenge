@@ -1,0 +1,2141 @@
+{
+  "calculations": {
+    "agingTotals": {
+      "Current": 36000,
+      "1-30 days past due": 28000,
+      "31-60 days past due": 22000,
+      "61-90 days past due": 18000,
+      "More than 90 days past due": 14000
+    },
+    "agingRows": [
+      {
+        "Age category": "Current",
+        "Receivables": 36000,
+        "Estimated loss rate": 0.01,
+        "Estimated uncollectible": 360
+      },
+      {
+        "Age category": "1-30 days past due",
+        "Receivables": 28000,
+        "Estimated loss rate": 0.04,
+        "Estimated uncollectible": 1120
+      },
+      {
+        "Age category": "31-60 days past due",
+        "Receivables": 22000,
+        "Estimated loss rate": 0.1,
+        "Estimated uncollectible": 2200
+      },
+      {
+        "Age category": "61-90 days past due",
+        "Receivables": 18000,
+        "Estimated loss rate": 0.25,
+        "Estimated uncollectible": 4500
+      },
+      {
+        "Age category": "More than 90 days past due",
+        "Receivables": 14000,
+        "Estimated loss rate": 1.0,
+        "Estimated uncollectible": 14000
+      }
+    ],
+    "gross": 118000,
+    "required": 22180,
+    "percentage": 9440,
+    "valuation": {
+      "ending_allowance": 22180,
+      "allowance_increase": 18180,
+      "bad_debt_increase": 18180,
+      "net_realizable_value": 95820
+    },
+    "writeoff": [
+      {
+        "gross_before": 118000,
+        "allowance_before": 22180,
+        "net_before": 95820,
+        "gross_after": 118000,
+        "allowance_after": 22180,
+        "net_after": 95820
+      },
+      {
+        "gross_before": 118000,
+        "allowance_before": 22180,
+        "net_before": 95820,
+        "gross_after": 117999,
+        "allowance_after": 22179,
+        "net_after": 95820
+      },
+      {
+        "gross_before": 118000,
+        "allowance_before": 22180,
+        "net_before": 95820,
+        "gross_after": 104000,
+        "allowance_after": 8180,
+        "net_after": 95820
+      },
+      {
+        "gross_before": 118000,
+        "allowance_before": 22180,
+        "net_before": 95820,
+        "gross_after": 95820,
+        "allowance_after": 0,
+        "net_after": 95820
+      },
+      {
+        "gross_before": 118000,
+        "allowance_before": 22180,
+        "net_before": 95820,
+        "gross_after": 0,
+        "allowance_after": -95820,
+        "net_after": 95820
+      }
+    ],
+    "dashboard": {
+      "gross_receivables": 118000,
+      "net_receivables": 95820,
+      "overdue_amount": 82000,
+      "overdue_percent": 0.6949152542372882,
+      "over_60_amount": 32000,
+      "turnover": 6.900223618358003,
+      "collection_period": 52.896836419753086
+    }
+  },
+  "currency": [
+    [
+      -1000.5,
+      "-$1,000"
+    ],
+    [
+      -2.5,
+      "-$2"
+    ],
+    [
+      -1.5,
+      "-$2"
+    ],
+    [
+      -0.5,
+      "$0"
+    ],
+    [
+      0,
+      "$0"
+    ],
+    [
+      0.5,
+      "$0"
+    ],
+    [
+      1.5,
+      "$2"
+    ],
+    [
+      2.5,
+      "$2"
+    ],
+    [
+      999.5,
+      "$1,000"
+    ],
+    [
+      1000.5,
+      "$1,000"
+    ]
+  ],
+  "snapshots": [
+    {
+      "token": "eNpFjMEKgCAQRP9lzh6Cbv7NpglBQmh0SPz3xnaji495M26DbPCTgxT41slTGVQH05GAWPUrIitsdw2MUr9H0-mwsepsumgsFuubeGLmu8AD5HeYZZK9rg43Z_0BKck0gg",
+      "payload": {
+        "v": 3,
+        "s": 0,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 0,
+        "cr": {},
+        "di": 0,
+        "dr": {},
+        "ai": 0,
+        "ar": {},
+        "vr": {},
+        "vb": "",
+        "vs": false,
+        "ri": 0,
+        "rr": {},
+        "mi": 0,
+        "mr": {},
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNo1jkEOwzAIBL9S7TmHVr35Ef1CRDCRLCVxZac-NMrfiwO9MGJZFg5QQrgPoIJwnMrdyCZzl1GltMQy5m0k5vzZ1IRX3qXeirCkRtMi0K3Y3eQJhmhYDX6ldfShXYkuz283m7y6XKwt3laExxXx1DrpJ1D-g3U401JlwFeXzh9Ft0L5",
+      "payload": {
+        "v": 3,
+        "s": 1,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 0,
+        "cr": {
+          "service_on_account": "Notes receivable"
+        },
+        "di": 0,
+        "dr": {},
+        "ai": 0,
+        "ar": {},
+        "vr": {},
+        "vb": "",
+        "vs": false,
+        "ri": 0,
+        "rr": {},
+        "mi": 0,
+        "mr": {},
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNp1kLFOxDAMhl-lytwBAVM3RhZ4hMiX-DiLxKkct6fe6d4d51IGECz5ZPuP_P--OiA3PYwOxE3Xm1E7g7WfDa3twlK1ZBTPRdFN7s1QB8GAtMIhoRsd5jmVDdFDXIFDU73rCeWnilhRsKpHEMb4t6hCwuoFdRE2xUsIZWH9ta-irBTQF_bQBf9ILUtsGWDP1RE7cseefW1ow36SeM-eCn9Y8hm2jKz-TBzL2Xa96kAcBKHaKQLU00A5YyRQTNsAHAdMlImhnSqUlDAoFR6E6mczdZx3C31Z3j1IL2Uvq5se78ae7D3YWou-ftu14RFSxdFd7NPtC2rhmdo",
+      "payload": {
+        "v": 3,
+        "s": 2,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 4,
+        "cr": {
+          "service_on_account": "Accounts receivable",
+          "customer_note": "Notes receivable",
+          "employee_advance": "Other receivable",
+          "interest_earned": "Other receivable",
+          "sales_return": "Accounts receivable"
+        },
+        "di": 0,
+        "dr": {
+          "longer_payment_window": "It increases cash immediately and eliminates collection risk"
+        },
+        "ai": 0,
+        "ar": {},
+        "vr": {},
+        "vb": "",
+        "vs": false,
+        "ri": 0,
+        "rr": {},
+        "mi": 0,
+        "mr": {},
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNp1Uj1v3TAM_CuEZg_9mt4WdGqHduku0BJfnhBZMkjJqRPkv5eSbOC1SBcfLFK8451eDQZz-TAZZHN5NXP-bT9aV5kpFTtjxOTIXMyvG4FDuQFGJvQ7uBwjuUIerpwXOG4oSskLsYCvHNIjfK-JzJuOLzpe0SnbF4XOdnbblEtj-aEgwOQobDhHMpOhZY15J7Lot0PLz3Ij_rsrpEJMUiwhJ_LvNwlGEstUKifteHAu11T-4RPiLTiyOVkcDf9p1V182wGPvQb4AcsAHrA1aEXd_ZNC312Vxt2uuC_NaR_kJPtWYMEdZCU197A55DTBXAvoVnD2qhpfnRrWDnHpR_mqpxulSooFQzNjMjGnR3X5JHsOyefnO6q6rpkLdIMGT9AoMYGnqPURfPLwRLTeeSCQa5GilZb0IGkW3nTYe3Rf25xGiMxhI5Cck4bUJnOQp166YoxDgujLuHtPvaiT-rY6fhFQBQJYCqM6tPVIrusRwHjUy5EAj18-fsVcPvdY2ndWZap6O8PSoooQmsyLXnr7A0PWFyY",
+      "payload": {
+        "v": 3,
+        "s": 3,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 4,
+        "cr": {
+          "service_on_account": "Accounts receivable",
+          "customer_note": "Notes receivable",
+          "employee_advance": "Other receivable",
+          "interest_earned": "Other receivable",
+          "sales_return": "Accounts receivable"
+        },
+        "di": 2,
+        "dr": {
+          "longer_payment_window": "It may support sales, but it can delay cash and keep receivables outstanding longer",
+          "shorter_payment_window": "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+          "early_payment_discount": "It may speed collection, but the discount reduces the amount of revenue retained"
+        },
+        "ai": 0,
+        "ar": {
+          "box_1_current_balance": "The cash already collected from current customers during June"
+        },
+        "vr": {},
+        "vb": "",
+        "vs": false,
+        "ri": 0,
+        "rr": {},
+        "mi": 0,
+        "mr": {},
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNp1VLFuGzEM_RXili4e0iZTtqBTC7Rdugs8HW2r0UlXiTrHCfrvfZLORlKkiwlJNN_je-S9DOyG-9vdwGm4fxnG-GQ-GltSkqBmZM_BynA__DwKaVT2FBcJZEvWOEuiLSOTHlmJk1CISmdRWjgrTUUI919LELq9GXat_ifjY84msdbK3zjwQWbAfcgkWd2Me4p7VBRaYlIXQz9WgIPQIcWy9OPJed8ARyEbvRerMm0ot2Ys9lHUXGoC64uSq1Txc60EVBuDJjeWBqWxIbP38VRbu3LaNaQlxSsZyotYt3f2IgMdGZV9Ep7O4AShTsmpSm1gv_G6M03H92gJJfldXJKJJEwuHOjhyuKCwHuF7DV35IkmGcFj-gU7qoLDH_io8BHRwtY7hGbrxS-DFirid4QMNCtu5dELuMm8-HgWMTytm-k_AJPeZrkAeFA3wilA63eTMnuBv6IlBWQ8WBtL0H_wsqTVWTExGO4J_0lFL1Ptgbe-eph6mHtIPaw11Ef0_gmh9Q6m_mwWPleFzOTyBQyyz3yuJkLwbXwwATvCJDSFL7lgM5U-5DBgblcYgiSrhFJNU3ahDZ6P4QCVL2AnF6Z4egVVljrR1ATqOE7JcoCRHu-W85E4TPQosrzSIFMsmpX7UHSQKuERxd6D-1zrVEBOya1COcYAk2rl5PJje9pjwjuFjMm4bnTuj6jUukX5ORMYYK5VE0OhtVmyXzYDIPUNwuZA6se0HXObwbV9YNaxC3EonBhjtOkpTyj6StWmQX2wcV44nPuSb_ag6bWZel1P44LFvmVpuNgJU3fi7W1fJnP9T7sM-DQgxbvnqrBZ2Zf6UKcIrDUV2Q3P9eIv_FnPtQ",
+      "payload": {
+        "v": 3,
+        "s": 4,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 4,
+        "cr": {
+          "service_on_account": "Accounts receivable",
+          "customer_note": "Notes receivable",
+          "employee_advance": "Other receivable",
+          "interest_earned": "Other receivable",
+          "sales_return": "Accounts receivable"
+        },
+        "di": 2,
+        "dr": {
+          "longer_payment_window": "It may support sales, but it can delay cash and keep receivables outstanding longer",
+          "shorter_payment_window": "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+          "early_payment_discount": "It may speed collection, but the discount reduces the amount of revenue retained"
+        },
+        "ai": 3,
+        "ar": {
+          "box_1_current_balance": "The total open customer balances that are not yet past due at June 30",
+          "box_2_loss_rate": "Management's estimate of the portion of that age group that will not be collected",
+          "box_3_bucket_estimate": "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+          "box_4_total_estimate": "It is the required ending Allowance balance after the bad debt adjustment"
+        },
+        "vr": {
+          "ending_allowance": 0,
+          "allowance_increase": 0,
+          "bad_debt_increase": 0,
+          "net_realizable_value": 0
+        },
+        "vb": "It guarantees the exact amount of cash the company will collect",
+        "vs": true,
+        "ri": 0,
+        "rr": {},
+        "mi": 0,
+        "mr": {},
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNp1VMtu2zAQ_JWFUKAXH5wXkKan9HFogbZA0TuxolY2G5pUSUqOE-TfOyQlw0nTixbSrnZ2Z4Z8bNg0NxerhkNz89i0_l6dKT2GIC6pli07Lc1N82srlHxiS34QR3qMye8k0FwRKW05EQch5xMdJNHAMVE3CuH719EJXaybVel_rqyPUQVOufM3dryRHeDeRpKYzA7fyffoKDT4kIx39TUDbIQ2wY9Dfd0bawtgK6S9taKTdDPKhWpHfSdJLT2B9SWRyaPicewEVO1dCqYdC1TyBZmt9fu82nGmVUEagj8OQ3EQbXqjFxpoy-hsg3B3wEwgah9MSpIX6Oe5LlXh8bWxhIL8GU2QjsR1xm3o9jjFgsB9Au25tuWOOmkxR_cbcmQGmyfomKAjooaslwhF1kUvhRUy4neECDQtZuLWCmaT3WD9QURxN82i_wBMeF5lHOAxuhIODly_WhTZCvSVNAaHilut_ejSC7woYTJalHeKa8F_SrFLl3fgea8auhp2NYQaphxyErufI5TdMak9qIEPmSHVmbiAgfYdH7KIIHy2DxywIjihMLzUYppurCaHALvyCSYIMokbs2iJjSvGs95twPICtjeu8_sTqHHIjqZCUMUxiTQ7CGmR1xy3xK6jO5HhhINIfkwxcTVFBckUbtHsNbiPuU8G5BDMJBS9dxApdw4m3pVUD4fXESKccTzRsSbRqWyL9rtImAC-TikwGJqKJP0wCwCq1wizAqG-hsJ8Nr_A-YvA8VThn8ftsLzGkYlY883Z5Wq9Xr-nDzD3p2zuz_e4b6KQcS9q8hBoeFVUx_01tZXnIH0Wcr6RvO2euRNM9vk8bhm0MBTue8lX3Yn-lSL87cjJ_vnfIH0qqx2vB7UM1tycXZ9dY3ecS5XP5b-ZeqjV8V-Y9LwkHK4plFrzkFHUxHZE8t3V9fk6uxprpjDKqnkAuU9_AW3Y_1Y",
+      "payload": {
+        "v": 3,
+        "s": 5,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 4,
+        "cr": {
+          "service_on_account": "Accounts receivable",
+          "customer_note": "Notes receivable",
+          "employee_advance": "Other receivable",
+          "interest_earned": "Other receivable",
+          "sales_return": "Accounts receivable"
+        },
+        "di": 2,
+        "dr": {
+          "longer_payment_window": "It may support sales, but it can delay cash and keep receivables outstanding longer",
+          "shorter_payment_window": "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+          "early_payment_discount": "It may speed collection, but the discount reduces the amount of revenue retained"
+        },
+        "ai": 3,
+        "ar": {
+          "box_1_current_balance": "The total open customer balances that are not yet past due at June 30",
+          "box_2_loss_rate": "Management's estimate of the portion of that age group that will not be collected",
+          "box_3_bucket_estimate": "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+          "box_4_total_estimate": "It is the required ending Allowance balance after the bad debt adjustment"
+        },
+        "vr": {
+          "ending_allowance": 22180,
+          "allowance_increase": 18180,
+          "bad_debt_increase": 18180,
+          "net_realizable_value": 95820
+        },
+        "vb": "It reflects that older receivables often have a different collection risk than newer receivables",
+        "vs": true,
+        "ri": 0,
+        "rr": {
+          "writeoff_accounts": "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000"
+        },
+        "mi": 0,
+        "mr": {},
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNqFVU2P2zYQ_SuEEKAXH7wfKTbuKUguLdAGKHonRtTIZpcmVX7IcYL8974hZdmbbNHLzkqk5s2892b8tSPb7R42HcVu97Xrw2d9p02JkX3WPTnyhrtd99eBVQ6ZnAoTe2VKyuHIUS03ksoHyooiKx-yOnNWE6WshsIK738rntXDttvU_PfahZR0pCyZfydPez4C7qekOGV7xHsVRmRkNYWYbfDtUQD2rPYxlKk9nqxzFbBnZYJzbDIPC8qD7ot55qwvOYH1a1ZWSsWfNRNQTfA52r5UqBwqMjkXTtLaWtOmIk0xrMWoNLGxozUXGtSBkNlFpuGMmkDUKdqcWRoYl7oedeXxtbJYRf6n2MiDYj9Yv1fv1youCDRm0C53exrUwD3qGP6GHMJg9w06ZuiIaCDrI0KV9aKXRguC-AdCApphO1PvGLXxcXLhzKxpmBfRPwEmvrxlPeBRumaKHly_eimRY-jLuUSPG--NCcXn7_ASx9ka1sFrahf-4yp6GaQHWvpqYWjh2EJsYZYgh-j9HqH2jkrdWU90Fob0YNMFDLQf6SwigvDFPnDARsEJleHLXVQzlGZyCHCsr2CCyDP7IqJlsr4azwW_B8sXsJP1QzjdQJVJHK0qQQ3HZmXIQ0iHc0PpoMgP6pl5uuEgqVByytRM0UCEwgOSvQb3QfIIIMVoZ1YpBA-RJHO06bkejXB4KyHBGetEp3aITLVbpD8mhQrg65wjgaG5SjJOiwCgeotQqRbBw4zabj09cTSoTgauknZtqk7RcZ1_xZ8xTxBf5gxjuEgiaLGZObYdRYMW42ONGBLFxIVAwf9gR5L4JA5bRkanA7Po_aFtNUUpcU47GX-0tVruz7Wy1u919sYQ1cdQ-jwWd72PUSWHYrHrXslxOyu3dS7TUp2TqiJ7mKcJbAeW9bo0Yr2BIJ00n56rb7E2S5TB_IiHkhq9ye697CBCZ1cTN52tr1dk6BMSyTJibKLLwKXbibtpf2CDFZZQ35u7x812u_3lf8n44RNRDfl_rkOJn5e5b6aIPLoqchU_uOHF8gAPo6zLA8G1hAEcR66afd8Zvvag_vTya_Q4V4us21uDxVpYt7t7unvabq7u-eGk7Vy9fosdcl8PIDG2GTn7RVD0TK7g8N3bp_utLB20mWPhTfcFo_DtXxkPmKI",
+      "payload": {
+        "v": 3,
+        "s": 6,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 4,
+        "cr": {
+          "service_on_account": "Accounts receivable",
+          "customer_note": "Notes receivable",
+          "employee_advance": "Other receivable",
+          "interest_earned": "Other receivable",
+          "sales_return": "Accounts receivable"
+        },
+        "di": 2,
+        "dr": {
+          "longer_payment_window": "It may support sales, but it can delay cash and keep receivables outstanding longer",
+          "shorter_payment_window": "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+          "early_payment_discount": "It may speed collection, but the discount reduces the amount of revenue retained"
+        },
+        "ai": 3,
+        "ar": {
+          "box_1_current_balance": "The total open customer balances that are not yet past due at June 30",
+          "box_2_loss_rate": "Management's estimate of the portion of that age group that will not be collected",
+          "box_3_bucket_estimate": "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+          "box_4_total_estimate": "It is the required ending Allowance balance after the bad debt adjustment"
+        },
+        "vr": {
+          "ending_allowance": 22180,
+          "allowance_increase": 18180,
+          "bad_debt_increase": 18180,
+          "net_realizable_value": 95820
+        },
+        "vb": "It reflects that older receivables often have a different collection risk than newer receivables",
+        "vs": true,
+        "ri": 4,
+        "rr": {
+          "writeoff_accounts": "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+          "balance_sheet": "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+          "bad_debt_location": "Operating expense",
+          "interest_location": "Other revenues and gains outside operating income",
+          "risk_disclosure": "Discuss the significant collection risk in the notes"
+        },
+        "mi": 0,
+        "mr": {
+          "turnover": "It is the percentage of receivables that management expects not to collect"
+        },
+        "at": {},
+        "fp": {}
+      }
+    },
+    {
+      "token": "eNqFVl2P2zYQ_CuEUCAvPsD3UfTqPgXJS1u0Bdq-EytxJbMnkyo_5DhB_ntnSVm2kyvyEsaitLM7Mxzep4Zss3vcNBSa3aem9R_0ve5yCOySbmkk13Gza_7es0o-0aj8xE51OSZ_4KCWN6JKe0qKAivnkzpxUhPFpExmhee_ZMfqcdtsSv0HPfoYdaAklX8jRwMfAPcmKo7JHvBc-R4VWU0-JOtd_SkAA6sh-DzVn0c7jgWwZdX5ceQusVlQHnWbuxdO-lwTWD8nZaVV_LNWAmrnXQq2zQUq-YJM4-iPMtra06YgTcGvzag4cWd7251pUHtC5TEwmRN6AlHHYFNiGaBf-nrShcfX2mIV-N9sAxvFzlg3qLdrF2cE6hNol3dbMspwiz7MP5BDGGw-Q8cEHbF2kPUJS5H1rJfGCIL4O5YItI7tTO3I6I0P0-hPzJrMvIj-B2DC7VvWAR6ta6bgwPWrL0UaGfpyysHhjbdd57NLX-BFDrPtWHunqb7wP69iFiMz0DJXXUxdDnUJdZllkU3M_oClzI5Ox5Oe6CQMaWPjGQy0H-gkIoLwxT5wwEbBCYXh87voxuRqcghwKI9ggsAzuyyiJbKuGG_0bgDLZ7CjdcYfr6DyJI5WhaCKY5PqyEHIEfsdxb0iZ9QL83TFQVQ-p5iomqKCCIV7FHsN7p3UEUAKwc6sovcOIknlYONL2erh8NpChDPWEx3rJiqVaVH-EBU6gK9TCgSG5iJJPy0CVJsdanpUkxo9YUUfv8oYnT9MnKx8WMttVEyIlwH1Xe0ndgGHBbNtVKIwID38zKGEx2KITWkepoXdnSqS3i1jrzKBkYuKeuJgvRj03foMh1cGECVlSCe6kxzPstlyRzkCEtCSDpdaaOoF38TcigbJgrnTooIkgStMYQvho85NLfAwIbRoPQWjew-SpaGF6rv2dLcGKQ0irRErjbEqBfml0FIQoZV8OKGiHCvhZ0kOmKIjOc57f4QtJW3OIzhONy464uxK2mFbek17BOCwV2Df2MWVBfpqdJODNCYTnkA74DMEgtnEq-jgL0YER67RewOGICW4rEPXYphQjRIWoxgt2YWbAL0DR4IElOH_AOMPuGOihMRiKB33zKlQVy4mRTFyijtJcDhzTY0_V_hq2Ut89j6o9z63qc_j5X2kLYFtoemVGtdxd93nEnjl8Fe-Bpz_ekatYbkhl0Gsg_mljri8RA9uvhwkW9_jR441UqIdnFwj8NY19eVo2Oouye2IQnKfMC6Tc2bG69C8Gt8wRKWI_r67f9pst9ufvknGV5-Iaqj_Q8lV_IUwt9VxgXtpcbnz_Whu8j8uHtzDhDCAsX3PRbMvJysnx_Hx9mvMOBeLrBewBoulsWZ3_3z_vN1c3PPVTr029fotroGHsgGJcSHRaD8Kip5pzNj88fvnh63cGxgzhcyb5mOz237-D18wQFc",
+      "payload": {
+        "v": 3,
+        "s": 7,
+        "z": 0,
+        "d": {
+          "c": {},
+          "d": {},
+          "a": {},
+          "v": {},
+          "r": {},
+          "m": {}
+        },
+        "ci": 4,
+        "cr": {
+          "service_on_account": "Accounts receivable",
+          "customer_note": "Notes receivable",
+          "employee_advance": "Other receivable",
+          "interest_earned": "Other receivable",
+          "sales_return": "Accounts receivable"
+        },
+        "di": 2,
+        "dr": {
+          "longer_payment_window": "It may support sales, but it can delay cash and keep receivables outstanding longer",
+          "shorter_payment_window": "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+          "early_payment_discount": "It may speed collection, but the discount reduces the amount of revenue retained"
+        },
+        "ai": 3,
+        "ar": {
+          "box_1_current_balance": "The total open customer balances that are not yet past due at June 30",
+          "box_2_loss_rate": "Management's estimate of the portion of that age group that will not be collected",
+          "box_3_bucket_estimate": "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+          "box_4_total_estimate": "It is the required ending Allowance balance after the bad debt adjustment"
+        },
+        "vr": {
+          "ending_allowance": 22180,
+          "allowance_increase": 18180,
+          "bad_debt_increase": 18180,
+          "net_realizable_value": 95820
+        },
+        "vb": "It reflects that older receivables often have a different collection risk than newer receivables",
+        "vs": true,
+        "ri": 4,
+        "rr": {
+          "writeoff_accounts": "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+          "balance_sheet": "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+          "bad_debt_location": "Operating expense",
+          "interest_location": "Other revenues and gains outside operating income",
+          "risk_disclosure": "Discuss the significant collection risk in the notes"
+        },
+        "mi": 4,
+        "mr": {
+          "turnover": "It indicates how often average net receivables were converted through credit sales and collection during the year",
+          "collection_period": "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+          "urgent_cash": "Sell selected receivables to a factor",
+          "dashboard_focus": "Customer-by-customer aging details and recent payment history",
+          "balanced_plan": "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+        },
+        "at": {},
+        "fp": {}
+      }
+    }
+  ],
+  "shuffles": [
+    {
+      "seed": "0",
+      "salt": "claim-answer-order:service_on_account",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "claim-answer-order:customer_note",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Accounts receivable",
+        "Other receivable",
+        "Notes receivable"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "claim-answer-order:employee_advance",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "claim-answer-order:interest_earned",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Accounts receivable",
+        "Other receivable"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "claim-answer-order:sales_return",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "credit-answer-order:longer_payment_window",
+      "input": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically"
+      ],
+      "output": [
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically",
+        "It may support sales, but it can delay cash and keep receivables outstanding longer"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "credit-answer-order:shorter_payment_window",
+      "input": [
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed"
+      ],
+      "output": [
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "The Allowance for Doubtful Accounts is no longer needed",
+        "Revenue must increase because every customer will accept the shorter period"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "credit-answer-order:early_payment_discount",
+      "input": [
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay"
+      ],
+      "output": [
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay",
+        "It may speed collection, but the discount reduces the amount of revenue retained"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "aging-answer-order:box_1_current_balance",
+      "input": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible"
+      ],
+      "output": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The portion of current receivables expected to be uncollectible",
+        "The cash already collected from current customers during June"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "aging-answer-order:box_2_loss_rate",
+      "input": [
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance"
+      ],
+      "output": [
+        "The interest rate charged on every overdue customer balance",
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The percentage of customers whose invoices are exactly 61 days old"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "aging-answer-order:box_3_bucket_estimate",
+      "input": [
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group"
+      ],
+      "output": [
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is Bad Debt Expense for the entire company before considering any other age group",
+        "It is cash that customers in this age group already paid"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "aging-answer-order:box_4_total_estimate",
+      "input": [
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the ending gross Accounts Receivable balance"
+      ],
+      "output": [
+        "It is the ending gross Accounts Receivable balance",
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is automatically the amount of Bad Debt Expense for the period"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "reporting-answer-order:writeoff_accounts",
+      "input": [
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ],
+      "output": [
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000",
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "reporting-answer-order:balance_sheet",
+      "input": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Operating expenses: report the entire customer balance as an expense"
+      ],
+      "output": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Operating expenses: report the entire customer balance as an expense",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "reporting-answer-order:bad_debt_location",
+      "input": [
+        "Operating expense",
+        "Cost of goods sold",
+        "Other expense outside operating income"
+      ],
+      "output": [
+        "Cost of goods sold",
+        "Other expense outside operating income",
+        "Operating expense"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "reporting-answer-order:interest_location",
+      "input": [
+        "Sales revenue",
+        "Other revenues and gains outside operating income",
+        "Operating expense"
+      ],
+      "output": [
+        "Other revenues and gains outside operating income",
+        "Operating expense",
+        "Sales revenue"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "reporting-answer-order:risk_disclosure",
+      "input": [
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults",
+        "Remove all overdue balances without explanation"
+      ],
+      "output": [
+        "Discuss the significant collection risk in the notes",
+        "Remove all overdue balances without explanation",
+        "Wait until every affected customer formally defaults"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "management-answer-order:turnover",
+      "input": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It is the percentage of receivables that management expects not to collect",
+        "It measures how much profit the company earned on each credit sale"
+      ],
+      "output": [
+        "It is the percentage of receivables that management expects not to collect",
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It measures how much profit the company earned on each credit sale"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "management-answer-order:collection_period",
+      "input": [
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible"
+      ],
+      "output": [
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible",
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "management-answer-order:urgent_cash",
+      "input": [
+        "Sell selected receivables to a factor",
+        "Extend every customer's payment period",
+        "Increase the estimated allowance"
+      ],
+      "output": [
+        "Extend every customer's payment period",
+        "Increase the estimated allowance",
+        "Sell selected receivables to a factor"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "management-answer-order:dashboard_focus",
+      "input": [
+        "Customer-by-customer aging details and recent payment history",
+        "Customer profitability and expected future sales without invoice-aging details",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ],
+      "output": [
+        "Customer profitability and expected future sales without invoice-aging details",
+        "Customer-by-customer aging details and recent payment history",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "management-answer-order:balanced_plan",
+      "input": [
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Extend every due date and wait for customers to pay voluntarily"
+      ],
+      "output": [
+        "Extend every due date and wait for customers to pay voluntarily",
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+      ]
+    },
+    {
+      "seed": "0",
+      "salt": "valuation-benefit-order",
+      "input": [
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect",
+        "It eliminates the need to estimate an allowance balance",
+        "It treats every overdue customer balance as an immediate write-off"
+      ],
+      "output": [
+        "It treats every overdue customer balance as an immediate write-off",
+        "It eliminates the need to estimate an allowance balance",
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "claim-answer-order:service_on_account",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Other receivable",
+        "Accounts receivable",
+        "Notes receivable"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "claim-answer-order:customer_note",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Accounts receivable",
+        "Other receivable",
+        "Notes receivable"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "claim-answer-order:employee_advance",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "claim-answer-order:interest_earned",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Accounts receivable",
+        "Other receivable",
+        "Notes receivable"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "claim-answer-order:sales_return",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "credit-answer-order:longer_payment_window",
+      "input": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically"
+      ],
+      "output": [
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically",
+        "It may support sales, but it can delay cash and keep receivables outstanding longer"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "credit-answer-order:shorter_payment_window",
+      "input": [
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed"
+      ],
+      "output": [
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed",
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "credit-answer-order:early_payment_discount",
+      "input": [
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay"
+      ],
+      "output": [
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It removes receivables from the balance sheet before customers pay",
+        "It delays collection, but it increases the amount every customer pays"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "aging-answer-order:box_1_current_balance",
+      "input": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible"
+      ],
+      "output": [
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible",
+        "The total open customer balances that are not yet past due at June 30"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "aging-answer-order:box_2_loss_rate",
+      "input": [
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance"
+      ],
+      "output": [
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The interest rate charged on every overdue customer balance"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "aging-answer-order:box_3_bucket_estimate",
+      "input": [
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group"
+      ],
+      "output": [
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group",
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "aging-answer-order:box_4_total_estimate",
+      "input": [
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the ending gross Accounts Receivable balance"
+      ],
+      "output": [
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the ending gross Accounts Receivable balance",
+        "It is the required ending Allowance balance after the bad debt adjustment"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "reporting-answer-order:writeoff_accounts",
+      "input": [
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ],
+      "output": [
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000",
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "reporting-answer-order:balance_sheet",
+      "input": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Operating expenses: report the entire customer balance as an expense"
+      ],
+      "output": [
+        "Operating expenses: report the entire customer balance as an expense",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "reporting-answer-order:bad_debt_location",
+      "input": [
+        "Operating expense",
+        "Cost of goods sold",
+        "Other expense outside operating income"
+      ],
+      "output": [
+        "Other expense outside operating income",
+        "Cost of goods sold",
+        "Operating expense"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "reporting-answer-order:interest_location",
+      "input": [
+        "Sales revenue",
+        "Other revenues and gains outside operating income",
+        "Operating expense"
+      ],
+      "output": [
+        "Operating expense",
+        "Other revenues and gains outside operating income",
+        "Sales revenue"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "reporting-answer-order:risk_disclosure",
+      "input": [
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults",
+        "Remove all overdue balances without explanation"
+      ],
+      "output": [
+        "Remove all overdue balances without explanation",
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "management-answer-order:turnover",
+      "input": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It is the percentage of receivables that management expects not to collect",
+        "It measures how much profit the company earned on each credit sale"
+      ],
+      "output": [
+        "It measures how much profit the company earned on each credit sale",
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It is the percentage of receivables that management expects not to collect"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "management-answer-order:collection_period",
+      "input": [
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible"
+      ],
+      "output": [
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible",
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "management-answer-order:urgent_cash",
+      "input": [
+        "Sell selected receivables to a factor",
+        "Extend every customer's payment period",
+        "Increase the estimated allowance"
+      ],
+      "output": [
+        "Extend every customer's payment period",
+        "Sell selected receivables to a factor",
+        "Increase the estimated allowance"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "management-answer-order:dashboard_focus",
+      "input": [
+        "Customer-by-customer aging details and recent payment history",
+        "Customer profitability and expected future sales without invoice-aging details",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ],
+      "output": [
+        "A companywide cash forecast and next month's sales budget without customer-level balances",
+        "Customer profitability and expected future sales without invoice-aging details",
+        "Customer-by-customer aging details and recent payment history"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "management-answer-order:balanced_plan",
+      "input": [
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Extend every due date and wait for customers to pay voluntarily"
+      ],
+      "output": [
+        "Extend every due date and wait for customers to pay voluntarily",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Stop offering credit to every customer"
+      ]
+    },
+    {
+      "seed": "1",
+      "salt": "valuation-benefit-order",
+      "input": [
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect",
+        "It eliminates the need to estimate an allowance balance",
+        "It treats every overdue customer balance as an immediate write-off"
+      ],
+      "output": [
+        "It eliminates the need to estimate an allowance balance",
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect",
+        "It treats every overdue customer balance as an immediate write-off"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "claim-answer-order:service_on_account",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "claim-answer-order:customer_note",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Other receivable",
+        "Notes receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "claim-answer-order:employee_advance",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Accounts receivable",
+        "Other receivable",
+        "Notes receivable"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "claim-answer-order:interest_earned",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Other receivable",
+        "Notes receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "claim-answer-order:sales_return",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "credit-answer-order:longer_payment_window",
+      "input": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically"
+      ],
+      "output": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It changes a customer account into a note receivable automatically",
+        "It increases cash immediately and eliminates collection risk"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "credit-answer-order:shorter_payment_window",
+      "input": [
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed"
+      ],
+      "output": [
+        "The Allowance for Doubtful Accounts is no longer needed",
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "Revenue must increase because every customer will accept the shorter period"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "credit-answer-order:early_payment_discount",
+      "input": [
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay"
+      ],
+      "output": [
+        "It removes receivables from the balance sheet before customers pay",
+        "It delays collection, but it increases the amount every customer pays",
+        "It may speed collection, but the discount reduces the amount of revenue retained"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "aging-answer-order:box_1_current_balance",
+      "input": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible"
+      ],
+      "output": [
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible",
+        "The total open customer balances that are not yet past due at June 30"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "aging-answer-order:box_2_loss_rate",
+      "input": [
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance"
+      ],
+      "output": [
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance",
+        "Management's estimate of the portion of that age group that will not be collected"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "aging-answer-order:box_3_bucket_estimate",
+      "input": [
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group"
+      ],
+      "output": [
+        "It is Bad Debt Expense for the entire company before considering any other age group",
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is cash that customers in this age group already paid"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "aging-answer-order:box_4_total_estimate",
+      "input": [
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the ending gross Accounts Receivable balance"
+      ],
+      "output": [
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is the ending gross Accounts Receivable balance"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "reporting-answer-order:writeoff_accounts",
+      "input": [
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ],
+      "output": [
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000",
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "reporting-answer-order:balance_sheet",
+      "input": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Operating expenses: report the entire customer balance as an expense"
+      ],
+      "output": [
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Operating expenses: report the entire customer balance as an expense"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "reporting-answer-order:bad_debt_location",
+      "input": [
+        "Operating expense",
+        "Cost of goods sold",
+        "Other expense outside operating income"
+      ],
+      "output": [
+        "Operating expense",
+        "Other expense outside operating income",
+        "Cost of goods sold"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "reporting-answer-order:interest_location",
+      "input": [
+        "Sales revenue",
+        "Other revenues and gains outside operating income",
+        "Operating expense"
+      ],
+      "output": [
+        "Operating expense",
+        "Other revenues and gains outside operating income",
+        "Sales revenue"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "reporting-answer-order:risk_disclosure",
+      "input": [
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults",
+        "Remove all overdue balances without explanation"
+      ],
+      "output": [
+        "Remove all overdue balances without explanation",
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "management-answer-order:turnover",
+      "input": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It is the percentage of receivables that management expects not to collect",
+        "It measures how much profit the company earned on each credit sale"
+      ],
+      "output": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It measures how much profit the company earned on each credit sale",
+        "It is the percentage of receivables that management expects not to collect"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "management-answer-order:collection_period",
+      "input": [
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible"
+      ],
+      "output": [
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible",
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "management-answer-order:urgent_cash",
+      "input": [
+        "Sell selected receivables to a factor",
+        "Extend every customer's payment period",
+        "Increase the estimated allowance"
+      ],
+      "output": [
+        "Extend every customer's payment period",
+        "Increase the estimated allowance",
+        "Sell selected receivables to a factor"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "management-answer-order:dashboard_focus",
+      "input": [
+        "Customer-by-customer aging details and recent payment history",
+        "Customer profitability and expected future sales without invoice-aging details",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ],
+      "output": [
+        "Customer profitability and expected future sales without invoice-aging details",
+        "Customer-by-customer aging details and recent payment history",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "management-answer-order:balanced_plan",
+      "input": [
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Extend every due date and wait for customers to pay voluntarily"
+      ],
+      "output": [
+        "Extend every due date and wait for customers to pay voluntarily",
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+      ]
+    },
+    {
+      "seed": "42",
+      "salt": "valuation-benefit-order",
+      "input": [
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect",
+        "It eliminates the need to estimate an allowance balance",
+        "It treats every overdue customer balance as an immediate write-off"
+      ],
+      "output": [
+        "It eliminates the need to estimate an allowance balance",
+        "It guarantees the exact amount of cash the company will collect",
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It treats every overdue customer balance as an immediate write-off"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "claim-answer-order:service_on_account",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Accounts receivable",
+        "Other receivable"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "claim-answer-order:customer_note",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "claim-answer-order:employee_advance",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "claim-answer-order:interest_earned",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Accounts receivable",
+        "Other receivable"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "claim-answer-order:sales_return",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Other receivable",
+        "Accounts receivable",
+        "Notes receivable"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "credit-answer-order:longer_payment_window",
+      "input": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically"
+      ],
+      "output": [
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically",
+        "It may support sales, but it can delay cash and keep receivables outstanding longer"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "credit-answer-order:shorter_payment_window",
+      "input": [
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed"
+      ],
+      "output": [
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed",
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "credit-answer-order:early_payment_discount",
+      "input": [
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay"
+      ],
+      "output": [
+        "It removes receivables from the balance sheet before customers pay",
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It delays collection, but it increases the amount every customer pays"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "aging-answer-order:box_1_current_balance",
+      "input": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible"
+      ],
+      "output": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The portion of current receivables expected to be uncollectible",
+        "The cash already collected from current customers during June"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "aging-answer-order:box_2_loss_rate",
+      "input": [
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance"
+      ],
+      "output": [
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance",
+        "Management's estimate of the portion of that age group that will not be collected"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "aging-answer-order:box_3_bucket_estimate",
+      "input": [
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group"
+      ],
+      "output": [
+        "It is cash that customers in this age group already paid",
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is Bad Debt Expense for the entire company before considering any other age group"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "aging-answer-order:box_4_total_estimate",
+      "input": [
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the ending gross Accounts Receivable balance"
+      ],
+      "output": [
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is the ending gross Accounts Receivable balance",
+        "It is automatically the amount of Bad Debt Expense for the period"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "reporting-answer-order:writeoff_accounts",
+      "input": [
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ],
+      "output": [
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "reporting-answer-order:balance_sheet",
+      "input": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Operating expenses: report the entire customer balance as an expense"
+      ],
+      "output": [
+        "Operating expenses: report the entire customer balance as an expense",
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "reporting-answer-order:bad_debt_location",
+      "input": [
+        "Operating expense",
+        "Cost of goods sold",
+        "Other expense outside operating income"
+      ],
+      "output": [
+        "Other expense outside operating income",
+        "Cost of goods sold",
+        "Operating expense"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "reporting-answer-order:interest_location",
+      "input": [
+        "Sales revenue",
+        "Other revenues and gains outside operating income",
+        "Operating expense"
+      ],
+      "output": [
+        "Other revenues and gains outside operating income",
+        "Operating expense",
+        "Sales revenue"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "reporting-answer-order:risk_disclosure",
+      "input": [
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults",
+        "Remove all overdue balances without explanation"
+      ],
+      "output": [
+        "Discuss the significant collection risk in the notes",
+        "Remove all overdue balances without explanation",
+        "Wait until every affected customer formally defaults"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "management-answer-order:turnover",
+      "input": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It is the percentage of receivables that management expects not to collect",
+        "It measures how much profit the company earned on each credit sale"
+      ],
+      "output": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It measures how much profit the company earned on each credit sale",
+        "It is the percentage of receivables that management expects not to collect"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "management-answer-order:collection_period",
+      "input": [
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible"
+      ],
+      "output": [
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible",
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "management-answer-order:urgent_cash",
+      "input": [
+        "Sell selected receivables to a factor",
+        "Extend every customer's payment period",
+        "Increase the estimated allowance"
+      ],
+      "output": [
+        "Extend every customer's payment period",
+        "Sell selected receivables to a factor",
+        "Increase the estimated allowance"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "management-answer-order:dashboard_focus",
+      "input": [
+        "Customer-by-customer aging details and recent payment history",
+        "Customer profitability and expected future sales without invoice-aging details",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ],
+      "output": [
+        "Customer profitability and expected future sales without invoice-aging details",
+        "Customer-by-customer aging details and recent payment history",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "management-answer-order:balanced_plan",
+      "input": [
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Extend every due date and wait for customers to pay voluntarily"
+      ],
+      "output": [
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Extend every due date and wait for customers to pay voluntarily",
+        "Stop offering credit to every customer"
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "salt": "valuation-benefit-order",
+      "input": [
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect",
+        "It eliminates the need to estimate an allowance balance",
+        "It treats every overdue customer balance as an immediate write-off"
+      ],
+      "output": [
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It eliminates the need to estimate an allowance balance",
+        "It treats every overdue customer balance as an immediate write-off",
+        "It guarantees the exact amount of cash the company will collect"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "claim-answer-order:service_on_account",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Accounts receivable",
+        "Other receivable"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "claim-answer-order:customer_note",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "claim-answer-order:employee_advance",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "claim-answer-order:interest_earned",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "claim-answer-order:sales_return",
+      "input": [
+        "Accounts receivable",
+        "Notes receivable",
+        "Other receivable"
+      ],
+      "output": [
+        "Notes receivable",
+        "Other receivable",
+        "Accounts receivable"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "credit-answer-order:longer_payment_window",
+      "input": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It increases cash immediately and eliminates collection risk",
+        "It changes a customer account into a note receivable automatically"
+      ],
+      "output": [
+        "It may support sales, but it can delay cash and keep receivables outstanding longer",
+        "It changes a customer account into a note receivable automatically",
+        "It increases cash immediately and eliminates collection risk"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "credit-answer-order:shorter_payment_window",
+      "input": [
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive",
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed"
+      ],
+      "output": [
+        "Revenue must increase because every customer will accept the shorter period",
+        "The Allowance for Doubtful Accounts is no longer needed",
+        "Cash may arrive sooner and risk may fall, but some customers may find the terms less attractive"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "credit-answer-order:early_payment_discount",
+      "input": [
+        "It may speed collection, but the discount reduces the amount of revenue retained",
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay"
+      ],
+      "output": [
+        "It delays collection, but it increases the amount every customer pays",
+        "It removes receivables from the balance sheet before customers pay",
+        "It may speed collection, but the discount reduces the amount of revenue retained"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "aging-answer-order:box_1_current_balance",
+      "input": [
+        "The total open customer balances that are not yet past due at June 30",
+        "The cash already collected from current customers during June",
+        "The portion of current receivables expected to be uncollectible"
+      ],
+      "output": [
+        "The portion of current receivables expected to be uncollectible",
+        "The total open customer balances that are not yet past due at June 30",
+        "The cash already collected from current customers during June"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "aging-answer-order:box_2_loss_rate",
+      "input": [
+        "Management's estimate of the portion of that age group that will not be collected",
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance"
+      ],
+      "output": [
+        "The percentage of customers whose invoices are exactly 61 days old",
+        "The interest rate charged on every overdue customer balance",
+        "Management's estimate of the portion of that age group that will not be collected"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "aging-answer-order:box_3_bucket_estimate",
+      "input": [
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off",
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group"
+      ],
+      "output": [
+        "It is cash that customers in this age group already paid",
+        "It is Bad Debt Expense for the entire company before considering any other age group",
+        "It is this age group's contribution to the allowance estimate, not proof that a specific balance has already been written off"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "aging-answer-order:box_4_total_estimate",
+      "input": [
+        "It is the required ending Allowance balance after the bad debt adjustment",
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the ending gross Accounts Receivable balance"
+      ],
+      "output": [
+        "It is the ending gross Accounts Receivable balance",
+        "It is automatically the amount of Bad Debt Expense for the period",
+        "It is the required ending Allowance balance after the bad debt adjustment"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "reporting-answer-order:writeoff_accounts",
+      "input": [
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ],
+      "output": [
+        "Accounts Receivable decreases $14,000; Bad Debt Expense increases $14,000",
+        "Accounts Receivable decreases $14,000; Allowance for Doubtful Accounts decreases $14,000",
+        "Cash decreases $14,000; Accounts Receivable decreases $14,000"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "reporting-answer-order:balance_sheet",
+      "input": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet",
+        "Operating expenses: report the entire customer balance as an expense"
+      ],
+      "output": [
+        "Current assets: gross Accounts Receivable less Allowance for Doubtful Accounts equals net Accounts Receivable",
+        "Operating expenses: report the entire customer balance as an expense",
+        "Current assets: report gross Accounts Receivable and disclose the allowance in the notes without presenting it on the balance sheet"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "reporting-answer-order:bad_debt_location",
+      "input": [
+        "Operating expense",
+        "Cost of goods sold",
+        "Other expense outside operating income"
+      ],
+      "output": [
+        "Other expense outside operating income",
+        "Operating expense",
+        "Cost of goods sold"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "reporting-answer-order:interest_location",
+      "input": [
+        "Sales revenue",
+        "Other revenues and gains outside operating income",
+        "Operating expense"
+      ],
+      "output": [
+        "Operating expense",
+        "Other revenues and gains outside operating income",
+        "Sales revenue"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "reporting-answer-order:risk_disclosure",
+      "input": [
+        "Discuss the significant collection risk in the notes",
+        "Wait until every affected customer formally defaults",
+        "Remove all overdue balances without explanation"
+      ],
+      "output": [
+        "Wait until every affected customer formally defaults",
+        "Remove all overdue balances without explanation",
+        "Discuss the significant collection risk in the notes"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "management-answer-order:turnover",
+      "input": [
+        "It indicates how often average net receivables were converted through credit sales and collection during the year",
+        "It is the percentage of receivables that management expects not to collect",
+        "It measures how much profit the company earned on each credit sale"
+      ],
+      "output": [
+        "It is the percentage of receivables that management expects not to collect",
+        "It measures how much profit the company earned on each credit sale",
+        "It indicates how often average net receivables were converted through credit sales and collection during the year"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "management-answer-order:collection_period",
+      "input": [
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible"
+      ],
+      "output": [
+        "Gem City should increase its allowance because the collection period establishes the amount that will be uncollectible",
+        "Gem City should extend its stated payment period to match current customer behavior before considering other collection actions",
+        "Collection practices may need attention because average collection takes substantially longer than the stated payment period"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "management-answer-order:urgent_cash",
+      "input": [
+        "Sell selected receivables to a factor",
+        "Extend every customer's payment period",
+        "Increase the estimated allowance"
+      ],
+      "output": [
+        "Extend every customer's payment period",
+        "Increase the estimated allowance",
+        "Sell selected receivables to a factor"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "management-answer-order:dashboard_focus",
+      "input": [
+        "Customer-by-customer aging details and recent payment history",
+        "Customer profitability and expected future sales without invoice-aging details",
+        "A companywide cash forecast and next month's sales budget without customer-level balances"
+      ],
+      "output": [
+        "Customer profitability and expected future sales without invoice-aging details",
+        "A companywide cash forecast and next month's sales budget without customer-level balances",
+        "Customer-by-customer aging details and recent payment history"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "management-answer-order:balanced_plan",
+      "input": [
+        "Stop offering credit to every customer",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Extend every due date and wait for customers to pay voluntarily"
+      ],
+      "output": [
+        "Extend every due date and wait for customers to pay voluntarily",
+        "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount",
+        "Stop offering credit to every customer"
+      ]
+    },
+    {
+      "seed": "9223372036854775807",
+      "salt": "valuation-benefit-order",
+      "input": [
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It guarantees the exact amount of cash the company will collect",
+        "It eliminates the need to estimate an allowance balance",
+        "It treats every overdue customer balance as an immediate write-off"
+      ],
+      "output": [
+        "It eliminates the need to estimate an allowance balance",
+        "It guarantees the exact amount of cash the company will collect",
+        "It reflects that older receivables often have a different collection risk than newer receivables",
+        "It treats every overdue customer balance as an immediate write-off"
+      ]
+    }
+  ]
+}
