@@ -1,0 +1,8 @@
+{
+  "repository": "cybercrs/the-receivables-challenge",
+  "source_branch": "pilot/native-receivables",
+  "source_commit": "060cdb0332c6aeeb8e91cc1b974213a3ff552d83",
+  "original_static_commit": "9d5b351b2c06919b0675906e0b3c5b56f108d62b",
+  "preview_directory": "native-pilot/",
+  "publication_status": "native public preview"
+}
