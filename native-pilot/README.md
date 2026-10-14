@@ -2,7 +2,7 @@
 
 This is an isolated HTML/CSS/JavaScript implementation of The Receivables Challenge. It contains no Python interpreter, Streamlit, Pyodide, WebAssembly runtime, npm runtime dependency, external asset request, or installation step. The delivered activity is six native files plus a hash manifest; Python and Node are development/test tools only.
 
-The source branch remains `pilot/native-receivables`, originally based on the accepted `rollout/stlite-browser-navigation` commit `81f1411b256f635b7c31698b81a32c68b91ca4fa`. Main and the existing browser implementation remain unchanged. The preview is appended only under `native-pilot/` on the existing `stlite-browser` publishing branch. Its root URL and every unrelated publishing file are preserved. No Pages setting, credential, repository, or server deployment is changed.
+The source branch remains `pilot/native-receivables`, originally based on the accepted `rollout/stlite-browser-navigation` commit `81f1411b256f635b7c31698b81a32c68b91ca4fa`. Main and the existing browser implementation remain unchanged. The public JavaScript version is served only under `js/` on the existing `stlite-browser` publishing branch. The old published `native-pilot/` directory is removed without a redirect, as requested; development files remain in this source directory. Its root URL and every unrelated publishing file are preserved. No Pages setting, credential, repository, or server deployment is changed.
 
 ## Instructional fidelity
 
@@ -14,7 +14,7 @@ Native aging tables show the age buckets across the top and conventional fixed m
 
 ## Progress and review
 
-The original validated compressed version-3 `progress` URL snapshots are supported, including exact 63-bit seeds. Python-compatible SHA-256 seeding, MT19937 and shuffle behavior preserve the exact option order of old saved work. Native version-3 links in the original supported range can also be decoded by the unchanged Python validator. To try an old bookmark, retain its `progress` and `view` query parameters while changing the path to `/the-receivables-challenge/native-pilot/`.
+The original validated compressed version-3 `progress` URL snapshots are supported, including exact 63-bit seeds. Python-compatible SHA-256 seeding, MT19937 and shuffle behavior preserve the exact option order of old saved work. Native version-3 links in the original supported range can also be decoded by the unchanged Python validator. To try an old bookmark, retain its `progress` and `view` query parameters while changing the path to `/the-receivables-challenge/js/`. Saved-progress payloads remain compatible, but the unshared old public path no longer serves the app or a redirect.
 
 A separate bounded `view` records review position. Back is strictly read-only: it exposes no answer inputs, checks, revisions, hints/reveals, score changes or activity reset. Forward traverses reached pages and stops at the earned current page even after a correct answer. Only an original validated Open, Continue or Finish action advances the frontier. The action model enforces these rules independently of disabled/hidden controls.
 
@@ -37,11 +37,12 @@ node --test native-pilot/tests/*.test.mjs
 "$PY" -m unittest discover -s tests -v
 "$PY" native-pilot/tests/browser.py
 "$PY" native-pilot/build.py
+"$PY" native-pilot/build.py --site-output /tmp/receivables-js-site
 ```
 
-Serve `native-pilot/dist/` over ordinary HTTP/HTTPS for a local preview. `file://` is unsupported. The actual browser tests use `/native-pilot/` subdirectory hosting, all external traffic blocked, fresh Chromium contexts, screenshots, table downloads and original Python snapshot validation. See `VALIDATION.md` and `review/` for evidence.
+Serve `native-pilot/dist/` over ordinary HTTP/HTTPS for a local preview. `file://` is unsupported. The actual browser tests use the full `/the-receivables-challenge/js/` project path, verify the old route is absent, and preserve query parameters and fragments. They run with all external traffic blocked, fresh Chromium contexts, screenshots, table downloads and original Python snapshot validation. See `VALIDATION.md` and `review/` for evidence.
 
-The build copies only the six approved native assets and writes their SHA-256 manifest. It does not publish. Publication appends this directory to the existing static branch after checking the current refs and proving that existing publishing files are byte-identical.
+The build copies only the six approved native assets and writes their SHA-256 manifest. It does not publish. `build.py --site-output PATH` creates only `PATH/js/` and removes any old native-pilot directory from that generated site. Publication installs `js/` and removes only the old native-pilot publishing directory after checking refs and proving that the existing stlite root and unrelated files are byte-identical.
 
 ## Compatibility and measurements
 

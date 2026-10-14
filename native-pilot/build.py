@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -26,13 +27,29 @@ def build(output):
         "application_bytes": sum(sizes.values()),
         "runtime_dependencies": [],
         "entrypoint": "index.html",
+        "canonical_directory": "js/",
+        "removed_legacy_directory": "native-pilot/",
     }
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest, indent=2))
     return manifest
 
 
+def build_site(output):
+    """Prepare only /js/; the old published native directory is deliberately removed."""
+    legacy = output / "native-pilot"
+    if legacy.exists():
+        shutil.rmtree(legacy)
+    return build(output / "js")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=HERE / "dist")
-    build(parser.parse_args().output)
+    parser.add_argument(
+        "--site-output",
+        type=Path,
+        help="Package the native app under /js/ only",
+    )
+    args = parser.parse_args()
+    build_site(args.site_output) if args.site_output else build(args.output)

@@ -1,5 +1,6 @@
 PASSED: Native initialization, anonymous Python-compatible progress, desktop navigation
 PASSED: Missing and repeated wrong answers, refresh, original reveal/revision scoring, immutable and keyboard review
+PASSED: Canonical /js/ route works with relative assets and saved queries/fragments; old native-pilot route is absent
 PASSED: Unsubmitted drafts, exact stable option order, read-only bookmarks and future-view clamping
 PASSED: Whole-dollar validation, invalid and formatted numeric draft resume, calculation gates, unchanged rechecks and table CSV
 PASSED: Complete 25-page lesson, all 22 choices, original write-off balances, category scores and four debrief disclosures

@@ -9,6 +9,10 @@
       "status": "passed"
     },
     {
+      "name": "Canonical /js/ route works with relative assets and saved queries/fragments; old native-pilot route is absent",
+      "status": "passed"
+    },
+    {
       "name": "Unsubmitted drafts, exact stable option order, read-only bookmarks and future-view clamping",
       "status": "passed"
     },
@@ -42,28 +46,28 @@
   "external_requests": [],
   "cold_initializations": [
     {
-      "ready_from_navigation_ms": 89.70000000018626,
-      "automation_wall_ms": 131.6752329994415,
+      "ready_from_navigation_ms": 112.40000000037253,
+      "automation_wall_ms": 151.05433800090395,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 79.5,
-      "automation_wall_ms": 116.76618499950564,
+      "ready_from_navigation_ms": 80.80000000074506,
+      "automation_wall_ms": 115.7050049987447,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 80.79999999981374,
-      "automation_wall_ms": 119.9760689996765,
+      "ready_from_navigation_ms": 69.20000000111759,
+      "automation_wall_ms": 113.64365500048734,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 86,
-      "automation_wall_ms": 135.25600299999496,
+      "ready_from_navigation_ms": 82.79999999888241,
+      "automation_wall_ms": 125.19478499962133,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 83.3999999994412,
-      "automation_wall_ms": 122.29774000024918,
+      "ready_from_navigation_ms": 92.59999999962747,
+      "automation_wall_ms": 127.12825800008432,
       "browser_resource_bytes": 202743
     }
   ],
@@ -104,9 +108,9 @@
     "revisions": 5
   },
   "cold_summary_ms": {
-    "median": 83.3999999994412,
-    "min": 79.5,
-    "max": 89.70000000018626
+    "median": 82.79999999888241,
+    "min": 69.20000000111759,
+    "max": 112.40000000037253
   },
   "measurement_scope": "Five cache-disabled fresh Chromium contexts on local loopback in the saved cloud environment; not school-network, hosted HTTPS, device or classroom-load measurements.",
   "package_bytes": {

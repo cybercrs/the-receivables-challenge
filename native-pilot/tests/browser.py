@@ -9,6 +9,8 @@ import threading
 import time
 import traceback
 import urllib.parse
+import urllib.request
+import urllib.error
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -45,8 +47,8 @@ def main():
             pass
 
         def do_GET(self):
-            if self.path.startswith("/native-pilot/"):
-                self.path = self.path[len("/native-pilot") :]
+            if self.path.startswith("/the-receivables-challenge/js/"):
+                self.path = self.path[len("/the-receivables-challenge/js") :]
             super().do_GET()
 
     server = ThreadingHTTPServer(
@@ -54,7 +56,7 @@ def main():
     )
     threading.Thread(target=server.serve_forever, daemon=True).start()
     origin = f"http://127.0.0.1:{server.server_port}"
-    url = origin + "/native-pilot/"
+    url = origin + "/the-receivables-challenge/js/"
 
     def passed(name):
         result["checks"].append({"name": name, "status": "passed"})
@@ -240,9 +242,22 @@ def main():
             loaded(page)
             assert state(page)[0] == draft
             clone = watch(context.new_page())
-            clone.goto(bookmark, wait_until="domcontentloaded")
+            clone.goto(
+                bookmark + "&opaque=a%2Bb%2520&repeat=1&repeat=2#lesson%20notes",
+                wait_until="domcontentloaded",
+            )
             loaded(clone)
             review(clone)
+            assert (
+                urllib.parse.urlsplit(clone.url).path
+                == "/the-receivables-challenge/js/"
+            )
+            assert urllib.parse.urlsplit(clone.url).fragment == "lesson%20notes"
+            preserved = urllib.parse.parse_qs(urllib.parse.urlsplit(clone.url).query)
+            assert preserved["opaque"] == ["a+b%20"] and preserved["repeat"] == [
+                "1",
+                "2",
+            ]
             click(clone, "Forward")
             expect(
                 clone.get_by_role("radio", name=second.correct, exact=True)
@@ -263,6 +278,22 @@ def main():
             ).to_be_disabled()
             clone.close()
             click(page, "Forward")
+
+            for removed_path in [
+                "/the-receivables-challenge/native-pilot/",
+                "/the-receivables-challenge/native-pilot/index.html",
+            ]:
+                try:
+                    urllib.request.urlopen(origin + removed_path, timeout=5)
+                except urllib.error.HTTPError as error:
+                    assert error.code == 404
+                else:
+                    raise AssertionError(
+                        "Removed native-pilot route must not serve an app or redirect"
+                    )
+            passed(
+                "Canonical /js/ route works with relative assets and saved queries/fragments; old native-pilot route is absent"
+            )
             passed(
                 "Unsubmitted drafts, exact stable option order, read-only bookmarks and future-view clamping"
             )
@@ -517,6 +548,10 @@ def main():
                     legacy_page_url += "&draft=" + token
                 page.goto(legacy_page_url, wait_until="domcontentloaded")
                 loaded(page)
+                assert (
+                    urllib.parse.urlsplit(page.url).path
+                    == "/the-receivables-challenge/js/"
+                )
                 assert not page.get_by_text(
                     "This saved link could not be restored.", exact=False
                 ).count()
