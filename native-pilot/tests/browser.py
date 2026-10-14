@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import statistics
 import sys
 import threading
@@ -65,6 +66,16 @@ def main():
     def loaded(page):
         page.locator("html[data-ready=true][data-saving=false]").wait_for(timeout=15000)
         assert not page.locator("#save-error:not([hidden])").count()
+        expect(page).to_have_title("The Receivables Challenge")
+        labels = page.locator("[aria-label], [title], [alt], meta[content]").evaluate_all(
+            "nodes => nodes.flatMap(node => ['aria-label','title','alt','content'].map(name => node.getAttribute(name) || ''))"
+        )
+        visible_words = page.locator("body").inner_text() + "\n" + "\n".join(labels)
+        assert not re.search(
+            r"\b(?:pilot|preview|prototype|experimental)\b",
+            visible_words,
+            re.IGNORECASE,
+        ), "Student-visible app branding must be final"
 
     def state(page):
         loaded(page)
@@ -171,6 +182,12 @@ def main():
             assert state(page)[1] == 0
             layout(page, "desktop")
             page.screenshot(path=str(OUT / "briefing-desktop.png"), full_page=True)
+            result["student_branding"] = {
+                "title": page.title(),
+                "provisional_branding": "absent from every loaded page, labels and metadata",
+                "accounting_wording_preserved": "test an early-payment discount",
+            }
+            passed("Final student-facing title, rendered wording, accessibility labels and metadata")
             passed(
                 "Native initialization, anonymous Python-compatible progress, desktop navigation"
             )

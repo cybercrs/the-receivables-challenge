@@ -1,4 +1,4 @@
-# Native Receivables browser pilot
+# The Receivables Challenge — JavaScript app
 
 This is an isolated HTML/CSS/JavaScript implementation of The Receivables Challenge. It contains no Python interpreter, Streamlit, Pyodide, WebAssembly runtime, npm runtime dependency, external asset request, or installation step. The delivered activity is six native files plus a hash manifest; Python and Node are development/test tools only.
 
@@ -20,7 +20,7 @@ A separate bounded `view` records review position. Back is strictly read-only: i
 
 Choices, valid and unfinished numeric drafts, answers, first-pass flags and attempts survive navigation, refresh and bookmarks. A bounded optional `draft` parameter retains formatted and incomplete numeric text; arbitrary names/text are not persisted. Independent tabs and contexts begin independently without localStorage or a central save service. Reset is disabled during review and starts a fresh seed/activity on the current page. Older copied bookmarks remain their own saved games.
 
-The original snapshot validator caps saved attempts at 99, although its live counter can exceed that and then produce an unrestorable link. The native pilot preserves full repeated-practice scoring and automatically upgrades only such overflow snapshots to native version 4. These extended snapshots resume in the native pilot; the older app cannot interpret them. Ordinary snapshots remain version 3. First-pass and unchanged-answer recheck rules are unchanged. The revised lesson has 26 scored checkpoints: the legacy `valuation:ending_allowance` point is retired. Old native/Python links keep every remaining answer, draft, attempt, seed and earned position; the removed question's score/draft is discarded. The shown allowance total is retained only as an unscored wire value where needed by the old snapshot schema.
+The original snapshot validator caps saved attempts at 99, although its live counter can exceed that and then produce an unrestorable link. The JavaScript app preserves full repeated-practice scoring and automatically upgrades only such overflow snapshots to native version 4. These extended snapshots resume in the JavaScript app; the older app cannot interpret them. Ordinary snapshots remain version 3. First-pass and unchanged-answer recheck rules are unchanged. The revised lesson has 26 scored checkpoints: the legacy `valuation:ending_allowance` point is retired. Old native/Python links keep every remaining answer, draft, attempt, seed and earned position; the removed question's score/draft is discarded. The shown allowance total is retained only as an unscored wire value where needed by the old snapshot schema.
 
 ## Native-only aging update
 
@@ -46,8 +46,8 @@ The build copies only the six approved native assets and writes their SHA-256 ma
 
 ## Compatibility and measurements
 
-This pilot requires a current browser supporting ES modules, BigInt, Web Crypto, structured cloning and Compression/Decompression Streams. Chromium is tested; physical-device and broader browser coverage are not yet measured. Compression Streams compress the small saved URL snapshot; there is no application-runtime download or package installation.
+This app requires a current browser supporting ES modules, BigInt, Web Crypto, structured cloning and Compression/Decompression Streams. Chromium is tested; physical-device and broader browser coverage are not yet measured. Compression Streams compress the small saved URL snapshot; there is no application-runtime download or package installation.
 
 Cold initialization measurements use five cache-disabled fresh Chromium contexts on local loopback in the saved cloud environment. They are not hosted-network, school-device, school-bandwidth, or classroom-capacity measurements. They do not promise a specific real-world startup time.
 
-Hosted browser testing remains unavailable because of the known cloud proxy restriction on the Pages hostname. Publication status and its URL are verified through GitHub's deployment evidence; no alternate access route is used. The preview is for pilot testing and does not replace the current student app.
+Hosted browser testing remains unavailable because of the known cloud proxy restriction on the Pages hostname. Publication status and its URL are verified through GitHub's deployment evidence; no alternate access route is used. The JavaScript version is a final student-facing app at `/js/`. Its browser title is “The Receivables Challenge”; the build copies that maintained HTML title, while the exporter leaves the HTML entrypoint unchanged. Lesson wording, labels, help, metadata, and table downloads contain no provisional app branding. The accounting recommendation to “test an early-payment discount” is retained.

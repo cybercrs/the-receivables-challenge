@@ -1,0 +1,114 @@
+{
+  "status": "passed",
+  "final_title": "The Receivables Challenge",
+  "generated_pages": 25,
+  "generated_screen_variants": 75,
+  "generated_content_contains_provisional_branding": false,
+  "preserved_accounting_test_wording": [
+    {
+      "path": "$.groups[4].items[4].options[1]",
+      "text": "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+    },
+    {
+      "path": "$.groups[4].items[4].correct",
+      "text": "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+    },
+    {
+      "path": "$.screens[23].variants.unanswered[6].options[2]",
+      "text": "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+    },
+    {
+      "path": "$.screens[23].variants.wrong[7].text",
+      "text": "Best response: Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+    },
+    {
+      "path": "$.screens[23].variants.wrong[10].options[2]",
+      "text": "Keep competitive terms, strengthen risk screening, target overdue accounts, and test an early-payment discount"
+    }
+  ],
+  "packaged_title_and_assets": "passed",
+  "packaged_manifest_hashes": "passed",
+  "unchanged_runtime_assets": [
+    "original.css",
+    "style.css",
+    "content.js",
+    "engine.js",
+    "app.js"
+  ],
+  "rebuild_export_diff": "empty",
+  "exporter_does_not_generate_index_html": true,
+  "metadata_and_accessibility_labels": [
+    {
+      "tag": "META",
+      "title": null,
+      "label": null,
+      "alt": null,
+      "name": null,
+      "property": null,
+      "content": null
+    },
+    {
+      "tag": "META",
+      "title": null,
+      "label": null,
+      "alt": null,
+      "name": "viewport",
+      "property": null,
+      "content": "width=device-width,initial-scale=1"
+    },
+    {
+      "tag": "META",
+      "title": null,
+      "label": null,
+      "alt": null,
+      "name": "color-scheme",
+      "property": null,
+      "content": "light"
+    },
+    {
+      "tag": "NAV",
+      "title": null,
+      "label": "Review reached pages",
+      "alt": null,
+      "name": null,
+      "property": null,
+      "content": null
+    },
+    {
+      "tag": "BUTTON",
+      "title": "Back: review the previous reached page. Earlier pages are read-only.",
+      "label": "Back",
+      "alt": null,
+      "name": null,
+      "property": null,
+      "content": null
+    },
+    {
+      "tag": "BUTTON",
+      "title": "Forward: review the next reached page. Use the current page's validation controls to advance.",
+      "label": "Forward",
+      "alt": null,
+      "name": null,
+      "property": null,
+      "content": null
+    },
+    {
+      "tag": "DIV",
+      "title": null,
+      "label": "Lesson stages",
+      "alt": null,
+      "name": null,
+      "property": null,
+      "content": null
+    }
+  ],
+  "download_filenames": "receivables-aging-N.csv and receivables-valuation-N.csv; no provisional wording",
+  "csv_content_audit": {
+    "valuation-table.csv": true,
+    "review-table.csv": true
+  },
+  "existing_unit_AppTest": 25,
+  "native_tests": 13,
+  "local_browser_groups": 11,
+  "old_python_and_stlite_root": "unchanged"
+}

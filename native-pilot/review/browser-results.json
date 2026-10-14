@@ -1,6 +1,10 @@
 {
   "checks": [
     {
+      "name": "Final student-facing title, rendered wording, accessibility labels and metadata",
+      "status": "passed"
+    },
+    {
       "name": "Native initialization, anonymous Python-compatible progress, desktop navigation",
       "status": "passed"
     },
@@ -46,28 +50,28 @@
   "external_requests": [],
   "cold_initializations": [
     {
-      "ready_from_navigation_ms": 112.40000000037253,
-      "automation_wall_ms": 151.05433800090395,
+      "ready_from_navigation_ms": 78.09999999962747,
+      "automation_wall_ms": 128.03828500000236,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 80.80000000074506,
-      "automation_wall_ms": 115.7050049987447,
+      "ready_from_navigation_ms": 72.40000000037253,
+      "automation_wall_ms": 124.32076199911535,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 69.20000000111759,
-      "automation_wall_ms": 113.64365500048734,
+      "ready_from_navigation_ms": 78.5,
+      "automation_wall_ms": 136.16253799955302,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 82.79999999888241,
-      "automation_wall_ms": 125.19478499962133,
+      "ready_from_navigation_ms": 76.40000000037253,
+      "automation_wall_ms": 123.14857300043514,
       "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 92.59999999962747,
-      "automation_wall_ms": 127.12825800008432,
+      "ready_from_navigation_ms": 94.10000000149012,
+      "automation_wall_ms": 141.700819000107,
       "browser_resource_bytes": 202743
     }
   ],
@@ -101,6 +105,11 @@
       }
     ]
   },
+  "student_branding": {
+    "title": "The Receivables Challenge",
+    "provisional_branding": "absent from every loaded page, labels and metadata",
+    "accounting_wording_preserved": "test an early-payment discount"
+  },
   "score": {
     "correct": 22,
     "attempted": 26,
@@ -108,19 +117,19 @@
     "revisions": 5
   },
   "cold_summary_ms": {
-    "median": 82.79999999888241,
-    "min": 69.20000000111759,
-    "max": 112.40000000037253
+    "median": 78.09999999962747,
+    "min": 72.40000000037253,
+    "max": 94.10000000149012
   },
   "measurement_scope": "Five cache-disabled fresh Chromium contexts on local loopback in the saved cloud environment; not school-network, hosted HTTPS, device or classroom-load measurements.",
   "package_bytes": {
-    "index.html": 2031,
+    "index.html": 2013,
     "original.css": 6131,
     "style.css": 6283,
     "content.js": 156461,
     "engine.js": 18161,
     "app.js": 15707
   },
-  "package_total_bytes": 204774,
+  "package_total_bytes": 204756,
   "status": "passed"
 }

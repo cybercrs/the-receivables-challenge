@@ -17,13 +17,15 @@
     "http://127.0.0.1:38981/the-receivables-challenge/js/engine.js?v=20261014-aging"
   ],
   "page_errors": [],
-  "runtime_assets_identical_to": "84bb237c6da710850638ba21d31490ecb6d46bd1",
   "sha256": {
-    "index.html": "75ce89666752320623bda6caed6ff3b1c6994ec6b8f7f0fa2ca3e6f9b7968fa5",
+    "index.html": "1a19f55f0c6554e2db4f06779b6389f58a95fba79a7e8cb681158a482de0c2a8",
     "original.css": "b12e08780660a3ba5fb9e13b8b2df3e7e40276c026b571dbbabaf1823ed7d4bc",
     "style.css": "88d5859987588c9cd193b1fbfc0122f531801a4b8cc697fe94d8b346e65f200c",
     "content.js": "c6c9d9e42e392f59c372f44e823ac441407e0557c43957a6b55540bf9ca1bbf1",
     "engine.js": "6e6303fbae6888c64eedd24f071ae01472c89cc3b05f151f19fb0400ef6dc9e2",
     "app.js": "aabb248d3e609c9e9fd51a028ea17708a36d6e91c3b38ee4da1e1e321b1f4321"
-  }
+  },
+  "runtime_assets_unchanged_except": "index.html: final browser title",
+  "runtime_comparison_source": "d8130a23f7d5e079ed3de9654362ca32437d4622",
+  "title": "The Receivables Challenge"
 }
