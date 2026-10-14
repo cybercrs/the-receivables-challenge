@@ -25,6 +25,10 @@
       "status": "passed"
     },
     {
+      "name": "Pre-update native v3/v4 bookmarks migrate remaining answers, drafts, scores and review position without unlocking future pages",
+      "status": "passed"
+    },
+    {
       "name": "Independent tabs and contexts, reset/refresh, invalid snapshot rejection, original 63-bit bookmark compatibility",
       "status": "passed"
     },
@@ -38,29 +42,29 @@
   "external_requests": [],
   "cold_initializations": [
     {
-      "ready_from_navigation_ms": 79.29999999981374,
-      "automation_wall_ms": 117.30082599979141,
-      "browser_resource_bytes": 200634
+      "ready_from_navigation_ms": 89.70000000018626,
+      "automation_wall_ms": 131.6752329994415,
+      "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 88.89999999990687,
-      "automation_wall_ms": 133.3738890002678,
-      "browser_resource_bytes": 200634
+      "ready_from_navigation_ms": 79.5,
+      "automation_wall_ms": 116.76618499950564,
+      "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 86.39999999990687,
-      "automation_wall_ms": 128.90049799989356,
-      "browser_resource_bytes": 200634
+      "ready_from_navigation_ms": 80.79999999981374,
+      "automation_wall_ms": 119.9760689996765,
+      "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 81.39999999990687,
-      "automation_wall_ms": 116.78906899987851,
-      "browser_resource_bytes": 200634
+      "ready_from_navigation_ms": 86,
+      "automation_wall_ms": 135.25600299999496,
+      "browser_resource_bytes": 202743
     },
     {
-      "ready_from_navigation_ms": 91.10000000009313,
-      "automation_wall_ms": 136.15247799998542,
-      "browser_resource_bytes": 200634
+      "ready_from_navigation_ms": 83.3999999994412,
+      "automation_wall_ms": 122.29774000024918,
+      "browser_resource_bytes": 202743
     }
   ],
   "layout": {
@@ -95,24 +99,24 @@
   },
   "score": {
     "correct": 22,
-    "attempted": 27,
-    "total": 27,
-    "revisions": 6
+    "attempted": 26,
+    "total": 26,
+    "revisions": 5
   },
   "cold_summary_ms": {
-    "median": 86.39999999990687,
-    "min": 79.29999999981374,
-    "max": 91.10000000009313
+    "median": 83.3999999994412,
+    "min": 79.5,
+    "max": 89.70000000018626
   },
   "measurement_scope": "Five cache-disabled fresh Chromium contexts on local loopback in the saved cloud environment; not school-network, hosted HTTPS, device or classroom-load measurements.",
   "package_bytes": {
-    "index.html": 1980,
+    "index.html": 2031,
     "original.css": 6131,
-    "style.css": 5197,
-    "content.js": 156974,
-    "engine.js": 17352,
-    "app.js": 14980
+    "style.css": 6283,
+    "content.js": 156461,
+    "engine.js": 18161,
+    "app.js": 15707
   },
-  "package_total_bytes": 202614,
+  "package_total_bytes": 204774,
   "status": "passed"
 }

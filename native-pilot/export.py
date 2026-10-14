@@ -179,6 +179,103 @@ def state_at(stage, index=0, status="unanswered"):
     return state
 
 
+AGING_TEXT = {
+    "Box 1 is in the Current row under Receivables.": "Box 1 is in the Current column on the Accounts receivable row.",
+    "Box 2 is in the 61-90 days past due row under Estimated loss rate.": "Box 2 is in the 61-90 days past due column on the Estimated loss rate row.",
+    "Box 3 is in the More than 90 days past due row under Estimated uncollectible.": "Box 3 is in the More than 90 days past due column on the Estimated uncollectible row.",
+    "Box 4 is the total of the Estimated uncollectible column.": "Box 4 is the total on the Estimated uncollectible row.",
+    "The receivables column groups outstanding customer claims by age.": "The Accounts receivable row groups outstanding customer claims across age-bucket columns.",
+}
+
+
+def native_aging_words(value):
+    if isinstance(value, str):
+        for old, new in AGING_TEXT.items():
+            value = value.replace(old, new)
+        return value
+    if isinstance(value, list):
+        return [native_aging_words(item) for item in value]
+    if isinstance(value, dict):
+        return {key: native_aging_words(item) for key, item in value.items()}
+    return value
+
+
+def native_schedule(source_rows):
+    """Conventional horizontal schedule, including totals and original cell markers."""
+    metrics = [
+        ("Accounts receivable", "Receivables"),
+        ("Estimated loss rate", "Estimated loss rate"),
+        ("Estimated uncollectible", "Estimated uncollectible"),
+    ]
+    return [
+        {"Measure": label, **{row["Age category"]: row[key] for row in source_rows}}
+        for label, key in metrics
+    ]
+
+
+def native_screen(events, stage, schedule):
+    """Apply requested native-only curriculum changes; never modify the old renderer."""
+    revised = []
+    for node in events:
+        if stage == 3:
+            node = native_aging_words(node)
+        if stage in (3, 4) and node["kind"] == "table":
+            node = {
+                "kind": "table",
+                "rows": schedule,
+                "fixedRows": True,
+                "orientation": "age-buckets-across",
+            }
+        if stage == 4:
+            if (
+                node["kind"] == "number"
+                and node["key"] == "widget_valuation_ending_allowance"
+            ):
+                continue
+            if (
+                node["kind"] == "html"
+                and "feedback-label" in node["text"]
+                and "Required ending Allowance for Doubtful Accounts" in node["text"]
+            ):
+                continue
+            if node["kind"] == "caption" and node["text"].startswith(
+                "Method comparison:"
+            ):
+                continue
+            if node["kind"] == "write" and node["text"].startswith(
+                "Use the aging result"
+            ):
+                node = {
+                    "kind": "write",
+                    "text": "Use the full aging schedule, including its totals, to determine the adjustment, the related account increases, and net realizable value reported after the bad debt adjustment.",
+                }
+        if (
+            stage == 7
+            and node["kind"] == "details"
+            and node["label"].startswith("Why did aging produce")
+        ):
+            node = {
+                "kind": "details",
+                "label": "How can aging be more informative than a single flat loss-rate estimate?",
+                "children": [
+                    {
+                        "kind": "write",
+                        "text": "One alternative is a single flat-rate estimate: apply the same estimated loss rate to all receivables. As an illustration, 8% of $118,000 gives a $9,440 allowance estimate.",
+                    },
+                    {
+                        "kind": "write",
+                        "text": "The aging schedule instead applies a different estimated loss rate to each age group, producing the $22,180 total shown in the schedule. Older invoices often have a different collection risk than newer invoices.",
+                    },
+                    {
+                        "kind": "write",
+                        "text": "When the age-specific rates are well supported by collection evidence, aging can give a more informative estimate of the mix of collection risks. Neither approach guarantees accuracy: both are estimates that should be checked against subsequent collections and updated as conditions change.",
+                    },
+                ],
+            }
+        revised.append(node)
+    return revised
+
+
 def export():
     recorder = Recorder()
     namespace = {}
@@ -189,6 +286,7 @@ def export():
         items = next((g[-1] for g in GROUPS if g[0] == stage), [None])
         positions.extend({"stage": stage, "index": i} for i in range(len(items)))
     positions.append({"stage": 7, "index": 0})
+    schedule = native_schedule(namespace["completed_aging_schedule"]())
     screens = []
     for position in positions:
         variants = {}
@@ -196,7 +294,7 @@ def export():
             recorder.session_state = state_at(**position, status=status)
             with recorder.capture() as events:
                 namespace[RENDERERS[position["stage"]]]()
-            variants[status] = events
+            variants[status] = native_screen(events, position["stage"], schedule)
         screens.append({**position, "variants": variants})
     with recorder.capture() as hero:
         namespace["render_hero"]()
@@ -211,7 +309,10 @@ def export():
                 "draft": draft,
                 "indexKey": idx,
                 "responseKey": responses,
-                "items": [asdict(x) for x in items],
+                "items": [
+                    native_aging_words(asdict(x)) if stage == 3 else asdict(x)
+                    for x in items
+                ],
             }
             for stage, prefix, draft, idx, responses, items in GROUPS
         ],
@@ -222,7 +323,11 @@ def export():
         "percentageRate": case.PERCENTAGE_OF_RECEIVABLES_RATE,
         "creditSales": case.NET_CREDIT_SALES,
         "beginningNet": case.BEGINNING_NET_ACCOUNTS_RECEIVABLE,
-        "valuationFields": case.VALUATION_FIELDS,
+        "valuationFields": [
+            field for field in case.VALUATION_FIELDS if field[0] != "ending_allowance"
+        ],
+        "legacyValuationFields": case.VALUATION_FIELDS,
+        "nativeRevision": "2026-10-14-aging-horizontal",
         "benefitOptions": case.VALUATION_BENEFIT_OPTIONS,
         "benefitCorrect": case.VALUATION_BENEFIT_CORRECT,
         "stages": namespace["STAGE_LABELS"],
@@ -232,7 +337,7 @@ def export():
     }
     here = Path(__file__).resolve().parent
     (here / "content.js").write_text(
-        "// Generated from unchanged Python case data and teaching renderers.\nexport const DATA = "
+        "// Generated from unchanged Python sources with native-only curriculum overrides.\nexport const DATA = "
         + json.dumps(data, ensure_ascii=True, separators=(",", ":"))
         + ";\n"
     )
@@ -298,6 +403,14 @@ def export():
         "choice_decisions": sum(len(g[-1]) for g in GROUPS),
         "pages": len(positions),
         "screen_variants": len(screens) * 3,
+        "native_checkpoints": sum(len(g[-1]) for g in GROUPS)
+        + len(data["valuationFields"])
+        + 1,
+        "native_only_overrides": [
+            "horizontal full aging schedules",
+            "remove redundant allowance target",
+            "introduce flat rate only in debrief",
+        ],
         "app_owned_assets": [],
         "generated_sha256": {
             name: hashlib.sha256((here / name).read_bytes()).hexdigest()

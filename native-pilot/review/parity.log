@@ -1,18 +1,21 @@
-✔ All calculated balances, aging rows, write-offs and ratios match Python (1.12021ms)
-✔ Whole-dollar formatting preserves Python ties-to-even, including negative halves (8.269713ms)
-✔ Every option shuffle matches Python, including seeds above JS safe integer range (14.391586ms)
-✔ Original URL snapshots decode exactly; native snapshots round-trip losslessly (19.382523ms)
-✔ Malformed, oversized, out-of-sequence, and completed-wrong states cannot unlock pages (1.549136ms)
-✔ Amounts accept whole dollars and correct comma groups without silent rounding (0.311299ms)
-✔ Read-only actions cannot edit, submit, reveal, reset or advance; Forward stops at frontier (0.571652ms)
-✔ Complete case and unchanged valuation rechecks preserve original scoring semantics (4.048276ms)
-✔ Snapshot seed type and original boundaries hold; extended practice retains exact scoring and resume (1.802308ms)
-✔ Only numeric draft text is persisted; names or arbitrary text cannot enter the anonymous saved link (0.410078ms)
-ℹ tests 10
+✔ All calculated balances, aging rows, write-offs and ratios match Python (2.036681ms)
+✔ Whole-dollar formatting preserves Python ties-to-even, including negative halves (8.654757ms)
+✔ Every option shuffle matches Python, including seeds above JS safe integer range (16.74059ms)
+✔ Original URL snapshots migrate only the retired checkpoint; native snapshots round-trip losslessly (20.404637ms)
+✔ Malformed, oversized, out-of-sequence, and completed-wrong states cannot unlock pages (1.53027ms)
+✔ Amounts accept whole dollars and correct comma groups without silent rounding (0.318469ms)
+✔ Read-only actions cannot edit, submit, reveal, reset or advance; Forward stops at frontier (0.654113ms)
+✔ Complete case and unchanged valuation rechecks preserve original scoring semantics (7.552551ms)
+✔ Snapshot seed type and original boundaries hold; extended practice retains exact scoring and resume (1.923071ms)
+✔ Only numeric draft text is persisted; names or arbitrary text cannot enter the anonymous saved link (0.46566ms)
+✔ Old native v3/v4 bookmarks keep remaining work, large seeds, view/frontier, and corrected 26-point scoring (8.169268ms)
+✔ Native-only schedules and final discussion implement the revised learning sequence (0.387823ms)
+✔ Aging cell directions and explanations follow the transposed native axes (0.143306ms)
+ℹ tests 13
 ℹ suites 0
-ℹ pass 10
+ℹ pass 13
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 92.114123
+ℹ duration_ms 111.152223

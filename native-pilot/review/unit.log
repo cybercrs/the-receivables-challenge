@@ -1,21 +1,21 @@
-test_complete_case_reaches_debrief_with_allowed_reasoning (test_app_flow.PerfectReceivablesFlowTests.test_complete_case_reaches_debrief_with_allowed_reasoning) ... 2026-10-14 16:20:15.813 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_complete_case_reaches_debrief_with_allowed_reasoning (test_app_flow.PerfectReceivablesFlowTests.test_complete_case_reaches_debrief_with_allowed_reasoning) ... 2026-10-14 17:53:37.683 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_dollar_amounts_in_feedback_are_escaped (test_app_flow.PerfectReceivablesFlowTests.test_dollar_amounts_in_feedback_are_escaped) ... 2026-10-14 16:20:17.285 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_dollar_amounts_in_feedback_are_escaped (test_app_flow.PerfectReceivablesFlowTests.test_dollar_amounts_in_feedback_are_escaped) ... 2026-10-14 17:53:38.795 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_draft_restores_and_wrong_answer_revises_in_one_check (test_app_flow.PerfectReceivablesFlowTests.test_draft_restores_and_wrong_answer_revises_in_one_check) ... 2026-10-14 16:20:17.356 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_draft_restores_and_wrong_answer_revises_in_one_check (test_app_flow.PerfectReceivablesFlowTests.test_draft_restores_and_wrong_answer_revises_in_one_check) ... 2026-10-14 17:53:38.862 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_complete_case_reaches_debrief_with_allowed_reasoning (test_browser_flow.PerfectReceivablesFlowTests.test_complete_case_reaches_debrief_with_allowed_reasoning) ... 2026-10-14 16:20:17.479 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_complete_case_reaches_debrief_with_allowed_reasoning (test_browser_flow.PerfectReceivablesFlowTests.test_complete_case_reaches_debrief_with_allowed_reasoning) ... 2026-10-14 17:53:38.974 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_dollar_amounts_in_feedback_are_escaped (test_browser_flow.PerfectReceivablesFlowTests.test_dollar_amounts_in_feedback_are_escaped) ... 2026-10-14 16:20:18.021 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_dollar_amounts_in_feedback_are_escaped (test_browser_flow.PerfectReceivablesFlowTests.test_dollar_amounts_in_feedback_are_escaped) ... 2026-10-14 17:53:39.457 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_draft_restores_and_wrong_answer_revises_in_one_check (test_browser_flow.PerfectReceivablesFlowTests.test_draft_restores_and_wrong_answer_revises_in_one_check) ... 2026-10-14 16:20:18.111 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_draft_restores_and_wrong_answer_revises_in_one_check (test_browser_flow.PerfectReceivablesFlowTests.test_draft_restores_and_wrong_answer_revises_in_one_check) ... 2026-10-14 17:53:39.545 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_navigation_and_advance_reject_locked_future_and_review_mutation (test_browser_navigation.BrowserNavigationTests.test_navigation_and_advance_reject_locked_future_and_review_mutation) ... 2026-10-14 16:20:18.193 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_navigation_and_advance_reject_locked_future_and_review_mutation (test_browser_navigation.BrowserNavigationTests.test_navigation_and_advance_reject_locked_future_and_review_mutation) ... 2026-10-14 17:53:39.621 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
-test_review_preserves_earned_progress_and_current_draft (test_browser_navigation.BrowserNavigationTests.test_review_preserves_earned_progress_and_current_draft) ... 2026-10-14 16:20:18.238 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
-2026-10-14 16:20:18.470 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
-2026-10-14 16:20:18.524 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
-2026-10-14 16:20:18.570 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_review_preserves_earned_progress_and_current_draft (test_browser_navigation.BrowserNavigationTests.test_review_preserves_earned_progress_and_current_draft) ... 2026-10-14 17:53:39.663 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-14 17:53:39.784 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-14 17:53:39.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-14 17:53:39.872 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
 ok
 test_aging_and_valuation_evaluation (test_engine.ReceivablesEngineTests.test_aging_and_valuation_evaluation) ... ok
 test_aging_estimate_and_account_increases (test_engine.ReceivablesEngineTests.test_aging_estimate_and_account_increases) ... ok
@@ -36,6 +36,6 @@ test_unknown_snapshot_keys_are_rejected (test_progress.ProgressSnapshotTests.tes
 test_unsubmitted_draft_and_shuffle_seed_survive_refresh (test_progress.ProgressSnapshotTests.test_unsubmitted_draft_and_shuffle_seed_survive_refresh) ... ok
 
 ----------------------------------------------------------------------
-Ran 25 tests in 2.818s
+Ran 25 tests in 2.245s
 
 OK

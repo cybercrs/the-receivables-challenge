@@ -21,9 +21,11 @@ test('Whole-dollar formatting preserves Python ties-to-even, including negative 
 test('Every option shuffle matches Python, including seeds above JS safe integer range',async()=>{
  for(const item of oracle.shuffles)assert.deepEqual(await e.shuffled(item.input,BigInt(item.seed),item.salt),item.output);
 });
-test('Original URL snapshots decode exactly; native snapshots round-trip losslessly',async()=>{
+test('Original URL snapshots migrate only the retired checkpoint; native snapshots round-trip losslessly',async()=>{
  for(const fixture of oracle.snapshots){
   const state=await e.decodeState(fixture.token),expected={...fixture.payload,z:BigInt(fixture.payload.z)};
+  if(expected.vs)expected.vr.ending_allowance=e.requiredAllowance();
+  delete expected.d.v.ending_allowance;delete expected.at['valuation:ending_allowance'];delete expected.fp['valuation:ending_allowance'];
   assert.deepEqual(state,expected);
   assert.deepEqual(await e.decodeState(await e.encodeState(state)),state);
  }
@@ -37,7 +39,7 @@ test('Malformed, oversized, out-of-sequence, and completed-wrong states cannot u
   s=>s.vr.ending_allowance=22180,s=>s.cr.service_on_account='unknown',s=>s.at.future=1,s=>s.fp['claim:service_on_account']='yes',s=>s.z=2n**63n]){
   const bad=e.copy(source);mutate(bad);assert.throws(()=>e.validateSnapshot(bad));
  }
- const bad=e.copy(oracle.snapshots[5].payload);bad.z=0n;bad.vr.ending_allowance=0;
+ const bad=e.copy(oracle.snapshots[5].payload);bad.z=0n;bad.vr.allowance_increase=0;
  assert.throws(()=>e.validateSnapshot(bad));
 });
 test('Amounts accept whole dollars and correct comma groups without silent rounding',()=>{
@@ -71,7 +73,7 @@ test('Complete case and unchanged valuation rechecks preserve original scoring s
   for(const item of group.items){assert(lesson.draftChoice(item.correct));assert(lesson.submitChoice());assert(lesson.advance());}
  }
  assert.equal(lesson.state.s,7);
- assert.deepEqual(e.scoreSummary(lesson.state),{correct:23,attempted:27,total:27,revisions:4});
+ assert.deepEqual(e.scoreSummary(lesson.state),{correct:23,attempted:26,total:26,revisions:3});
  const saved=e.canonicalJSON(lesson.state);
  while(lesson.move(-1))assert.equal(e.canonicalJSON(lesson.state),saved);
  while(lesson.move(1))assert.equal(e.canonicalJSON(lesson.state),saved);
@@ -98,4 +100,49 @@ test('Only numeric draft text is persisted; names or arbitrary text cannot enter
  const raw={ending_allowance:'22,',allowance_increase:'Jane Doe',bad_debt_increase:'123.5'};
  const saved=e.readRawDraft(e.rawDraftToken(raw));
  assert.deepEqual(saved,{ending_allowance:'22,',bad_debt_increase:'123.5'});
+});
+const legacyBookmarks=JSON.parse(fs.readFileSync(new URL('./legacy-native-bookmarks.json',import.meta.url),'utf8'));
+test('Old native v3/v4 bookmarks keep remaining work, large seeds, view/frontier, and corrected 26-point scoring',async()=>{
+ for(const record of legacyBookmarks.records){
+  const decoded=await e.decodeState(record.token);assert(decoded,record.name);
+  const lesson=new e.Lesson(decoded,record.view,record.rawNumbers);
+  assert.equal(lesson.state.z,2n**63n-1n);assert.equal(lesson.view,record.view);
+  assert(!Object.hasOwn(lesson.state.at,'valuation:ending_allowance'));
+  assert(!Object.hasOwn(lesson.state.fp,'valuation:ending_allowance'));
+  assert.equal(e.scoreSummary(lesson.state).total,26);
+  assert.deepEqual(await e.decodeState(await e.encodeState(lesson.state)),lesson.state);
+  if(record.name==='unfinished-legacy-drafts'){
+   assert.equal(lesson.rawNumbers.allowance_increase,'18,');assert(!Object.hasOwn(lesson.rawNumbers,'ending_allowance'));assert(!lesson.canAdvance());
+  } else if(record.name==='perfect-old-completion-review'){
+   assert.equal(lesson.state.s,7);assert.equal(e.scoreSummary(lesson.state).correct,26);assert(lesson.reviewing);assert(!lesson.advance());
+  } else {
+   assert.equal(lesson.state.s,4);assert(lesson.canAdvance());assert(!lesson.move(1));
+   assert.equal(lesson.state.vr.ending_allowance,22180);assert(lesson.advance());assert.equal(lesson.state.s,5);
+  }
+ }
+});
+test('Native-only schedules and final discussion implement the revised learning sequence',()=>{
+ assert.equal(DATA.valuationFields.length,3);assert(!DATA.valuationFields.some(([key])=>key==='ending_allowance'));
+ assert.equal(e.validScoreKeys().size,26);
+ for(const screen of DATA.screens.filter(s=>[3,4].includes(s.stage)))for(const nodes of Object.values(screen.variants)){
+  const table=nodes.find(n=>n.kind==='table');assert(table.fixedRows);assert.equal(table.rows.length,3);
+  assert.deepEqual(Object.keys(table.rows[0]),['Measure',...DATA.buckets,'Total']);
+  assert.equal(table.rows[0].Total,'$118,000');assert.equal(table.rows[2].Total,'[4] $22,180');
+  if(screen.stage===4){assert(!nodes.some(n=>n.key==='widget_valuation_ending_allowance'));
+   assert(!nodes.some(n=>n.kind==='caption'&&n.text.includes('Method comparison')));
+   assert(!JSON.stringify(nodes).includes('$9,440'));
+  }
+ }
+ const discussion=DATA.screens.at(-1).variants.correct.find(n=>n.kind==='details'&&n.label.includes('single flat'));
+ assert(discussion);const text=discussion.children.map(n=>n.text).join(' ');
+ assert(text.includes('As an illustration, 8% of $118,000 gives a $9,440'));
+ assert(text.includes('well supported by collection evidence'));assert(text.includes('Neither approach guarantees accuracy'));
+});
+test('Aging cell directions and explanations follow the transposed native axes',()=>{
+ const text=JSON.stringify(DATA.screens.filter(s=>s.stage===3));
+ for(const old of ['Current row under Receivables','past due row under Estimated','total of the Estimated uncollectible column','The receivables column groups'])assert(!text.includes(old));
+ assert(text.includes('Current column on the Accounts receivable row'));
+ assert(text.includes('61-90 days past due column on the Estimated loss rate row'));
+ assert(text.includes('More than 90 days past due column on the Estimated uncollectible row'));
+ assert(text.includes('total on the Estimated uncollectible row'));
 });

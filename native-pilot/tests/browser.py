@@ -96,6 +96,30 @@ def main():
         ).to_be_disabled()
         assert not page.locator("main .primary").count()
 
+    def check_schedule(page):
+        table = page.get_by_role("table")
+        expect(table).to_have_count(1)
+        expect(table.locator("thead th")).to_have_text(
+            ["Measure", *case.AGING_BUCKETS, "Total"]
+        )
+        expect(table.locator("tbody tr")).to_have_count(3)
+        expect(table.locator("tbody th")).to_have_text(
+            ["Accounts receivable", "Estimated loss rate", "Estimated uncollectible"]
+        )
+        expect(table.locator("tbody tr").nth(0).locator("td").last).to_have_text(
+            "$118,000"
+        )
+        expect(table.locator("tbody tr").nth(2).locator("td").last).to_have_text(
+            "[4] $22,180"
+        )
+        for cell in table.locator("thead th:last-child, tbody td:last-child").all():
+            cell.scroll_into_view_if_needed()
+            expect(cell).to_be_in_viewport()
+            box = cell.bounding_box()
+            region_box = table.locator("..").bounding_box()
+            assert box["x"] >= region_box["x"] - 1
+            assert box["x"] + box["width"] <= region_box["x"] + region_box["width"] + 1
+
     def layout(page, label):
         boxes = [
             page.get_by_role("button", name=label, exact=True).bounding_box()
@@ -244,13 +268,38 @@ def main():
             )
             for group_index, (items, check) in enumerate(GROUPS):
                 if group_index == 3:
+                    check_schedule(page)
+                    assert not page.locator(
+                        "#widget_valuation_ending_allowance"
+                    ).count()
+                    expect(page.locator("main .amount")).to_have_count(3)
+                    assert "$9,440" not in page.locator("main").inner_text()
+                    page.screenshot(
+                        path=str(OUT / "valuation-schedule-desktop.png"), full_page=True
+                    )
+                    page.set_viewport_size({"width": 390, "height": 844})
+                    check_schedule(page)
+                    region = page.get_by_role(
+                        "region", name="Aging schedule:", exact=False
+                    )
+                    region.evaluate(
+                        "element => element.scrollLeft = element.scrollWidth"
+                    )
+                    check_schedule(page)
+                    assert page.evaluate(
+                        "document.documentElement.scrollWidth <= window.innerWidth"
+                    )
+                    page.screenshot(
+                        path=str(OUT / "valuation-schedule-narrow.png"), full_page=True
+                    )
+                    page.set_viewport_size({"width": 1280, "height": 900})
                     # Preserve both valid formatted amounts and invalid unfinished drafts in the URL.
-                    page.locator("#widget_valuation_ending_allowance").fill("22,")
+                    page.locator("#widget_valuation_allowance_increase").fill("22,")
                     loaded(page)
                     page.reload(wait_until="domcontentloaded")
                     loaded(page)
                     expect(
-                        page.locator("#widget_valuation_ending_allowance")
+                        page.locator("#widget_valuation_allowance_increase")
                     ).to_have_value("22,")
                     select(page, case.VALUATION_BENEFIT_CORRECT)
                     click(page, "Check the valuation")
@@ -259,6 +308,8 @@ def main():
                     )
                     assert not state(page)[0]["rc_valuation_submitted"]
                     for key, _label in case.VALUATION_FIELDS:
+                        if key == "ending_allowance":
+                            continue
                         page.locator(f"#widget_valuation_{key}").fill("0")
                         loaded(page)
                     click(page, "Check the valuation")
@@ -269,6 +320,8 @@ def main():
                         "button", name="Continue to reporting", exact=True
                     ).count()
                     for key, value in engine.valuation_values().items():
+                        if key == "ending_allowance":
+                            continue
                         page.locator(f"#widget_valuation_{key}").fill(f"${value:,}")
                         loaded(page)
                     calculated_draft = state(page)[0]
@@ -276,34 +329,19 @@ def main():
                     loaded(page)
                     assert state(page)[0] == calculated_draft
                     for key, value in engine.valuation_values().items():
+                        if key == "ending_allowance":
+                            continue
                         expect(page.locator(f"#widget_valuation_{key}")).to_have_value(
                             f"${value:,}"
                         )
                     click(page, "Check revised valuation")
-                    expect(
-                        page.get_by_text("Method comparison:", exact=False)
-                    ).to_contain_text("$9,440")
+                    assert "Method comparison:" not in page.locator("main").inner_text()
+                    assert "$9,440" not in page.locator("main").inner_text()
+                    check_schedule(page)
+                    assert not page.locator(
+                        "#widget_valuation_ending_allowance"
+                    ).count()
                     saved_table_state = state(page)[0]
-                    page.get_by_role("table").get_by_role(
-                        "button", name="Age category", exact=True
-                    ).click()
-                    expect(
-                        page.get_by_role("table")
-                        .locator("tbody tr")
-                        .first.locator("td")
-                        .first
-                    ).to_have_text("1-30 days past due")
-                    assert state(page)[0] == saved_table_state
-                    page.get_by_role("table").get_by_role(
-                        "button", name="Age category", exact=True
-                    ).click()
-                    expect(
-                        page.get_by_role("table")
-                        .locator("tbody tr")
-                        .first.locator("td")
-                        .first
-                    ).to_have_text("More than 90 days past due")
-                    assert state(page)[0] == saved_table_state
                     click(page, "Expand table")
                     expect(page.get_by_role("dialog")).to_be_visible()
                     assert state(page)[0] == saved_table_state
@@ -313,8 +351,10 @@ def main():
                     download = download_event.value
                     download.save_as(str(OUT / "valuation-table.csv"))
                     csv = (OUT / "valuation-table.csv").read_text()
-                    assert "Age category" in csv and "More than 90 days past due" in csv
-                    assert csv.count("\n") == 6 and "Total" not in csv
+                    assert "Measure" in csv and "More than 90 days past due" in csv
+                    assert (
+                        csv.count("\n") == 4 and "Total" in csv and "[4] $22,180" in csv
+                    )
                     click(page, "Continue to reporting")
                     passed(
                         "Whole-dollar validation, invalid and formatted numeric draft resume, calculation gates, unchanged rechecks and table CSV"
@@ -337,7 +377,16 @@ def main():
                     )
                     click(page, label)
                     if group_index == 2 and index == 0:
-                        expect(page.get_by_role("table")).to_have_count(1)
+                        check_schedule(page)
+                        page.screenshot(
+                            path=str(OUT / "aging-schedule-desktop.png"), full_page=True
+                        )
+                        page.set_viewport_size({"width": 390, "height": 844})
+                        check_schedule(page)
+                        page.screenshot(
+                            path=str(OUT / "aging-schedule-narrow.png"), full_page=True
+                        )
+                        page.set_viewport_size({"width": 1280, "height": 900})
                         # Original numbered cells and total remain visible in the aging screen.
                         expect(
                             page.get_by_text("[4] $22,180", exact=True)
@@ -346,16 +395,35 @@ def main():
             assert view == 24 and completed["rc_stage"] == 7
             expected_score = {
                 "correct": 22,
-                "attempted": 27,
-                "total": 27,
-                "revisions": 6,
+                "attempted": 26,
+                "total": 26,
+                "revisions": 5,
             }
-            assert progress.score_summary(completed) == expected_score
+            python_score = progress.score_summary(completed)
+            assert {**python_score, "total": 26} == expected_score
+            assert "valuation:ending_allowance" not in completed["rc_first_pass"]
+            assert "valuation:ending_allowance" not in completed["rc_attempts"]
             result["score"] = expected_score
             expect(
                 page.get_by_text("Valuation first pass:", exact=False)
-            ).to_contain_text("All first-pass decisions: 22 of 27")
+            ).to_contain_text("All first-pass decisions: 22 of 26")
+            expect(
+                page.get_by_text("Valuation first pass:", exact=False)
+            ).to_contain_text("Valuation first pass: 1/4")
             assert page.locator("details").count() == 4
+            alternate = page.locator("details").filter(
+                has=page.get_by_text(
+                    "How can aging be more informative than a single flat loss-rate estimate?",
+                    exact=True,
+                )
+            )
+            alternate.locator("summary").click()
+            expect(alternate).to_contain_text(
+                "As an illustration, 8% of $118,000 gives a $9,440"
+            )
+            expect(alternate).to_contain_text("well supported by collection evidence")
+            expect(alternate).to_contain_text("Neither approach guarantees accuracy")
+            alternate.locator("summary").click()
             for details in page.locator("details").all():
                 details.locator("summary").click()
                 assert details.inner_text().strip()
@@ -421,6 +489,78 @@ def main():
             expect(page.get_by_role("radio", name=wrong, exact=True)).to_be_checked()
             click(page, "Check the claim")
             assert state(page)[0]["rc_claim_responses"][first.id] == wrong
+            old_native = json.loads(
+                (SITE / "tests/legacy-native-bookmarks.json").read_text()
+            )
+            for record in old_native["records"]:
+                legacy_page_url = (
+                    url
+                    + "?progress="
+                    + record["token"]
+                    + "&view="
+                    + str(record["view"])
+                )
+                if record.get("rawNumbers"):
+                    import base64
+
+                    token = (
+                        base64.urlsafe_b64encode(
+                            json.dumps(record["rawNumbers"]).encode()
+                        )
+                        .decode()
+                        .rstrip("=")
+                    )
+                    legacy_page_url += "&draft=" + token
+                page.goto(legacy_page_url, wait_until="domcontentloaded")
+                loaded(page)
+                assert not page.get_by_text(
+                    "This saved link could not be restored.", exact=False
+                ).count()
+                if record["name"] == "perfect-old-completion-review":
+                    review(page)
+                    while page.locator("html").get_attribute("data-view") != "24":
+                        click(page, "Forward")
+                    expect(
+                        page.get_by_text("Valuation first pass:", exact=False)
+                    ).to_contain_text("All first-pass decisions: 26 of 26")
+                    expect(
+                        page.get_by_text("Valuation first pass:", exact=False)
+                    ).to_contain_text("Valuation first pass: 4/4")
+                elif record["name"] == "unfinished-legacy-drafts":
+                    expect(
+                        page.locator("#widget_valuation_allowance_increase")
+                    ).to_have_value("18,")
+                    assert not page.locator(
+                        "#widget_valuation_ending_allowance"
+                    ).count()
+                    expect(
+                        page.get_by_role("button", name="Forward", exact=True)
+                    ).to_be_disabled()
+                else:
+                    check_schedule(page)
+                    expect(
+                        page.get_by_role(
+                            "button", name="Continue to reporting", exact=True
+                        )
+                    ).to_be_visible()
+                    expect(
+                        page.get_by_role("button", name="Forward", exact=True)
+                    ).to_be_disabled()
+                    click(page, "Back")
+                    review(page)
+                    page.reload(wait_until="domcontentloaded")
+                    loaded(page)
+                    review(page)
+                    click(page, "Forward")
+                    click(page, "Continue to reporting")
+                    expect(
+                        page.get_by_text(
+                            "Write off and report the receivables", exact=True
+                        )
+                    ).to_be_visible()
+            passed(
+                "Pre-update native v3/v4 bookmarks migrate remaining answers, drafts, scores and review position without unlocking future pages"
+            )
             passed(
                 "Independent tabs and contexts, reset/refresh, invalid snapshot rejection, original 63-bit bookmark compatibility"
             )

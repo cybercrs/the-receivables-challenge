@@ -1,13 +1,12 @@
 {
-  "source_baseline": "81f1411b256f635b7c31698b81a32c68b91ca4fa",
-  "main_commit": "e76a08a4f3416b9923ca6007d27cd6839d0cfbdc",
-  "static_baseline": "9d5b351b2c06919b0675906e0b3c5b56f108d62b",
-  "all_original_files_unchanged": true,
-  "original_file_count": 45,
-  "source_ignore_append_only": true,
+  "source_baseline": "060cdb0332c6aeeb8e91cc1b974213a3ff552d83",
+  "all_non_native_files_unchanged": true,
+  "protected_files": 47,
   "sha256": {
     ".github/workflows/browser.yml": "d56d8c5ec09d46376d42e73b3447c549a370bb7edf9a28242cf2f377078788a4",
+    ".github/workflows/native-pilot.yml": "b9eb5d65fda446c540074d20723d9242a5bf6417065f7981080b9f41e15fdc25",
     ".github/workflows/tests.yml": "aaaeeb1547c4faee7fe6f6c5c39268c072d7544e55c27a9dfbedda63fefc97dd",
+    ".gitignore": "25d266db2a7892c6d01f66c31a29397c657a8e306b5fea38bbb535d23a21025f",
     ".python-version": "43fd694bd564dd2215f51a6b23f6a3712834850225e629d7781c81c71076092d",
     ".streamlit/config.toml": "a487e9df2573c7b7744b8123f0f52e0df956cf1964ee156c13e2b827f2be3d40",
     "README.md": "89af76d52f8c7f575c3e7a57a6d70ebbee98661812cf442021bfa365cb7e1f9f",

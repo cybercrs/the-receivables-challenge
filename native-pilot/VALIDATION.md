@@ -1,34 +1,26 @@
-# Native Receivables pilot validation
+# Native aging schedule revision validation
 
-Local validation completed October 14, 2026 in Accounting Teaching Apps. Publication is **pending explicit user approval**. No native source branch or preview has been pushed. Proposed preview: `https://cybercrs.github.io/the-receivables-challenge/native-pilot/`, appending only that unused directory on `stlite-browser` without changing Pages settings or the current root app.
+October 14, 2026. This update is confined to `native-pilot/` on the source and publishing branches. The approved destination remains `https://cybercrs.github.io/the-receivables-challenge/native-pilot/`. No Pages settings, main branch, old Python/Streamlit code, or existing stlite browser-root files are changed.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Existing unit/AppTest suite | Passed: 25 | [unit.log](review/unit.log) |
-| Native calculation, codec, shuffle, validation and scoring tests | Passed: 10 groups | [parity.log](review/parity.log), [Python oracles](tests/python-oracles.json) |
-| Actual Chromium browser walkthrough | Passed: 8 groups | [browser-results.json](review/browser-results.json), [browser.log](review/browser.log) |
-| Ruff for native development/test tools | Passed | [lint.log](review/lint.log) |
-| Source preservation | All 45 original tracked files except the append-only ignore list are byte unchanged | [source-protection.json](review/source-protection.json) |
-| Hosted UI, real devices/browser matrix, classroom concurrency | Not run | Known Pages hostname proxy restriction respected; publication pending |
+| Native calculation, codec, shuffle, migration and curriculum tests | Passed: 13 groups | [parity.log](review/parity.log) |
+| Actual Chromium revised lesson and bookmark walkthrough | Passed: 9 groups | [browser-results.json](review/browser-results.json), [browser.log](review/browser.log) |
+| Native Python tooling Ruff, JS syntax, whitespace | Passed | [lint.log](review/lint.log), [whitespace.log](review/whitespace.log) |
+| All non-native source files | Byte unchanged: 47 | [source-protection.json](review/source-protection.json) |
+| Hosted browser, real-device/browser matrix and classroom concurrency | Not run | Known proxy restriction respected |
 
-Calculation parity covers all aging rows, gross/allowance/net values, method comparison, five write-off amounts, and all liquidity metrics. Ten monetary formatting edge cases verify Python ties-to-even rounding. All 115 option-order fixtures match Python exactly, including seeds above JavaScript's safe integer range. Old saved snapshots at every stage decode exactly. New ordinary snapshots are accepted by the original Python validator, including the maximum 63-bit seed.
+Both aging schedules are transposed: age-bucket column headers, fixed Accounts receivable/Estimated loss rate/Estimated uncollectible rows, and a complete Total column. Original numerical assumptions and numbered cells remain. On narrow screens, horizontal scrolling retains sticky measure labels and totals. Cell directions and explanations follow the new axes. Table expansion and CSV retain the complete three-row/seven-column data.
 
-The browser run completed all 25 pages/22 choice decisions, deliberately selected a wrong claim twice, corrected it, deliberately submitted wrong valuation amounts, repeated an unchanged valuation, and then completed the case. The resulting first-pass score was **22/27 with six revisions**, matching Python's score summary. It tested original reveals, calculation gating, write-off balances, all four debrief disclosures, table sorting/expanded viewing/CSV, choice and formatted/unfinished numeric drafts, refresh/bookmarks, a full immutable review in both directions, future-view rejection, invalid snapshots, independent tabs and contexts, reset, keyboard focus/Enter, and 44-pixel arrow targets.
+Only the duplicate required ending allowance question is removed. The adjustment, expense increase, net realizable value, and conceptual aging response remain. All valuation feedback variants omit the premature flat-rate method comparison. The final discussion introduces an explicitly labeled 8% flat-rate illustration and describes why well-supported age-specific rates can be more informative without promising automatic accuracy.
 
-Screenshots: [desktop briefing](review/briefing-desktop.png), [write-off](review/writeoff-desktop.png), [desktop completion](review/complete-desktop.png), [desktop review](review/review-desktop.png), [narrow completion](review/complete-narrow.png), [narrow review](review/review-narrow.png). CSV evidence is in `review/valuation-table.csv` and `review/review-table.csv`.
+The denominator is now 26 checkpoints; valuation has four. The deliberate wrong-claim/revised-calculation flow yields **22/26 first-pass correct with five revisions**. Read-only review preserves the canonical snapshot, and Forward stops at the actual frontier. Pre-update native v3/v4 and original Python bookmarks retain all remaining answers, drafts, seeds and earned positions. Only retired question scoring/drafts are dropped; an old wrong answer to that removed question does not block otherwise completed retained work. The original wire allowance value is normalized to the now-given total without earning a new score or advancing a page.
 
-## Measured native startup and size
+The tests exercise full completion, current-page mistakes, repeated checks, invalid and formatted numeric draft refresh, final dropdown wording, old completed and in-progress bookmarks, future-view rejection, reset, independent contexts, keyboard navigation, full backward/forward review, desktop and 390-pixel schedule layouts, pinned total cells, table expansion and CSV. Zero external requests, console errors and page errors were recorded.
 
-The six application assets total **202,614 bytes (197.9 KiB)**. A hash/provenance manifest is packaged separately. They contain no Python, Pyodide, Streamlit, WebAssembly runtime, framework bundle or external asset dependency. The previously deployed stlite app remains at the root and is not downloaded by this pilot.
+Screenshots: [first schedule desktop](review/aging-schedule-desktop.png), [first schedule narrow](review/aging-schedule-narrow.png), [second schedule desktop](review/valuation-schedule-desktop.png), [second schedule narrow](review/valuation-schedule-narrow.png), [completion](review/complete-desktop.png). Legacy native fixtures were produced from the previously published source commit `060cdb0332c6aeeb8e91cc1b974213a3ff552d83`.
 
-Five fresh cache-disabled Chromium contexts on local loopback measured readiness from navigation at **86.4 ms median**, **79.3–91.1 ms range**. Timing includes importing the JavaScript case/screens, restoring/initializing progress, rendering and saving the initial URL. These are cloud loopback measurements, not hosted-network, physical-device, school bandwidth, or classroom-capacity claims. The full individual runs and resource byte counts are recorded in `browser-results.json`.
+The six native application assets total 204,774 bytes. Five cache-disabled loopback Chromium initializations measured 83.4 ms median (79.5–89.7 ms). These are local functional measurements, not school-network, physical-device or classroom-capacity guarantees.
 
-No console errors, page execution errors or external HTTP requests occurred. Browser traffic outside loopback was blocked by a closed test proxy; no TLS exception or alternate route to the restricted Pages host was used.
-
-## Fidelity and limits
-
-Original instructional content, calculations, balances, scoring rules, numeric bounds, feedback/reveal gates and downloads are preserved. Native system fonts and HTML widgets replace framework chrome. Current browsers must support ES modules, BigInt, Web Crypto, structured cloning and Compression Streams. Chromium is validated; other browsers/devices remain untested.
-
-Native numeric drafts can retain grouped currency and unfinished numeric text without silently rounding or persisting arbitrary identifying text. The original format supports saved attempt counts only through 99; the pilot preserves higher repeated-practice scores by upgrading only overflow snapshots to native version 4. These exceptional extended links resume in the native pilot, while ordinary links remain version-3 compatible. The older app does not support version 4.
-
-All remote mutations are paused per the latest instruction until explicit publication approval. Once approved, push the isolated source branch and append the tested native package only under `native-pilot/` on the existing static branch. Verify the complete baseline publishing tree is unchanged, then confirm the exact GitHub Pages deployed commit through the connector. No merge to main or Pages configuration change is needed.
+Exact source/static commits and successful Pages deployment are verified after publishing and reported separately. The existing public stlite root remains intact.

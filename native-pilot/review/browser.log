@@ -4,5 +4,6 @@ PASSED: Unsubmitted drafts, exact stable option order, read-only bookmarks and f
 PASSED: Whole-dollar validation, invalid and formatted numeric draft resume, calculation gates, unchanged rechecks and table CSV
 PASSED: Complete 25-page lesson, all 22 choices, original write-off balances, category scores and four debrief disclosures
 PASSED: Full immutable backward/forward traversal, review-only CSV, narrow layout and usable touch targets
+PASSED: Pre-update native v3/v4 bookmarks migrate remaining answers, drafts, scores and review position without unlocking future pages
 PASSED: Independent tabs and contexts, reset/refresh, invalid snapshot rejection, original 63-bit bookmark compatibility
 PASSED: Five measured cold native initializations; no runtime installation, external requests, console errors or execution errors
