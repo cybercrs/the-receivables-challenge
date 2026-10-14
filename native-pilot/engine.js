@@ -1,5 +1,5 @@
 /** Native calculations, lossless Python-compatible URL snapshots, and guarded lesson actions. */
-import { DATA } from './content.js';
+import { DATA } from './content.js?v=20261014-aging';
 
 export const GROUPS = DATA.groups;
 export const POSITIONS = DATA.positions;
@@ -39,8 +39,8 @@ export function valuationValues() {
   return {ending_allowance:required, allowance_increase:increase, bad_debt_increase:increase, net_realizable_value:gross()-required};
 }
 export function evaluateValuation(values, benefit) {
-  const fields = Object.fromEntries(Object.entries(valuationValues()).map(([key,expected]) =>
-    [key,{submitted:values[key] ?? 0,expected,correct:(values[key] ?? 0)===expected}]));
+  const expectedValues=valuationValues();
+  const fields = Object.fromEntries(DATA.valuationFields.map(([key]) => { const expected=expectedValues[key]; return [key,{submitted:values[key] ?? 0,expected,correct:(values[key] ?? 0)===expected}]; }));
   return {fields,benefit:{submitted:benefit,expected:DATA.benefitCorrect,correct:benefit===DATA.benefitCorrect},
     correct:Object.values(fields).every(field=>field.correct)&&benefit===DATA.benefitCorrect};
 }
@@ -60,8 +60,9 @@ export function validScoreKeys() {
     ...DATA.valuationFields.map(([key])=>`valuation:${key}`),'valuation:benefit']);
 }
 export function scoreSummary(state) {
-  return {correct:Object.values(state.fp).filter(Boolean).length,attempted:Object.keys(state.fp).length,
-    total:validScoreKeys().size,revisions:Object.values(state.at).reduce((sum,value)=>sum+Math.max(0,value-1),0)};
+  const valid=validScoreKeys(),first=Object.entries(state.fp).filter(([key])=>valid.has(key)),attempts=Object.entries(state.at).filter(([key])=>valid.has(key));
+  return {correct:first.filter(([,value])=>value).length,attempted:first.length,
+    total:valid.size,revisions:attempts.reduce((sum,[,value])=>sum+Math.max(0,value-1),0)};
 }
 export function newState(seed) {
   if (seed===undefined) {
@@ -97,10 +98,10 @@ export function validateSnapshot(raw) {
     for (const item of group.items.slice(0,index)) assert(responses[item.id]===item.correct,'Unresolved prior answer');
     if (stage===group.stage) assert(ids.length===index||ids.length===index+1,'Inconsistent position');
   }
-  const valuationKeys=DATA.valuationFields.map(([key])=>key);
+  const valuationKeys=DATA.legacyValuationFields.map(([key])=>key),assessedKeys=DATA.valuationFields.map(([key])=>key);
   assert(typeof raw.vs==='boolean'&&object(raw.vr),'Invalid valuation');
   assert(Object.keys(raw.vr).every(key=>valuationKeys.includes(key)),'Unknown valuation field');
-  if(raw.vs) assert(exactKeys(raw.vr,valuationKeys),'Incomplete valuation');
+  if(raw.vs) assert(assessedKeys.every(key=>own(raw.vr,key)),'Incomplete valuation');
   for(const value of Object.values(raw.vr)) assert(int(value,0,MAX_AMOUNT),'Invalid amount');
   assert(typeof raw.vb==='string'&&(raw.vb===''||DATA.benefitOptions.includes(raw.vb)),'Invalid benefit');
   if(raw.vs) assert(DATA.benefitOptions.includes(raw.vb),'Missing benefit');
@@ -111,10 +112,15 @@ export function validateSnapshot(raw) {
   assert(stage>=4||(!Object.keys(raw.vr).length&&!raw.vb&&!raw.vs&&!Object.keys(raw.d.v).length),'Future valuation');
   if(stage>=5) assert(raw.vs&&evaluateValuation(raw.vr,raw.vb).correct,'Unresolved valuation');
   assert(object(raw.at)&&object(raw.fp),'Invalid score history');
-  const scores=validScoreKeys();
+  const scores=validScoreKeys();scores.add('valuation:ending_allowance');
   for(const [key,value] of Object.entries(raw.at)) assert(scores.has(key)&&int(value,1,raw.v===3?99:Number.MAX_SAFE_INTEGER),'Invalid attempts');
   for(const [key,value] of Object.entries(raw.fp)) assert(scores.has(key)&&typeof value==='boolean','Invalid first pass');
-  return copy(raw);
+  const normalized=copy(raw);
+  // Retire the duplicate checkpoint without discarding any remaining work, seed or frontier.
+  delete normalized.at['valuation:ending_allowance'];delete normalized.fp['valuation:ending_allowance'];
+  delete normalized.d.v.ending_allowance;
+  if(normalized.vs)normalized.vr.ending_allowance=requiredAllowance();
+  return normalized;
 }
 export function canonicalJSON(value) {
   if(typeof value==='bigint') return value.toString();
@@ -153,8 +159,8 @@ async function transform(bytes,stream,max) {
   return output;
 }
 export async function encodeState(state) {
-  validateSnapshot(state);
-  const bytes=new TextEncoder().encode(canonicalJSON(state));
+  const normalized=validateSnapshot(state);
+  const bytes=new TextEncoder().encode(canonicalJSON(normalized));
   assert(bytes.length<=32000,'Saved state too large');
   return base64url(await transform(bytes,new CompressionStream('deflate'),12000));
 }
@@ -293,7 +299,8 @@ export class Lesson {
       if(!own(this.state.fp,scoreKey)||this.state.vr[key]!==values[key])this.recordAttempt(scoreKey,result.fields[key].correct);
     }
     if(!own(this.state.fp,'valuation:benefit')||this.state.vb!==benefit)this.recordAttempt('valuation:benefit',result.benefit.correct);
-    this.state.vr=values;this.state.vb=benefit;this.state.vs=true;this.state.d.v={...values,benefit};return true;
+    // Carry the given allowance total as an unscored legacy wire field for old URL compatibility.
+    this.state.vr={ending_allowance:requiredAllowance(),...values};this.state.vb=benefit;this.state.vs=true;this.state.d.v={...values,benefit};return true;
   }
   reset() {
     if(this.reviewing)return false;this.state=newState();this.view=0;this.rawNumbers={};return true;

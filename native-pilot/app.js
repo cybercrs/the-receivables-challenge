@@ -1,7 +1,7 @@
 /** Render original captured teaching screens using native, guarded browser controls. */
-import {DATA} from './content.js';
+import {DATA} from './content.js?v=20261014-aging';
 import {Lesson,frontier,shuffled,decodeState,encodeState,readRawDraft,rawDraftToken,
-  scoreSummary,currency,evaluateValuation,parseAmount,MAX_AMOUNT} from './engine.js';
+  scoreSummary,currency,evaluateValuation,parseAmount,MAX_AMOUNT} from './engine.js?v=20261014-aging';
 
 const $=id=>document.getElementById(id);
 let lesson,orders=new Map(),saveSequence=0;
@@ -61,16 +61,20 @@ function number(node) {
 function csv(rows,columns) {return columns.map(x=>`"${x.replaceAll('"','""')}"`).join(',')+'\r\n'+rows.map(row=>columns.map(key=>`"${String(row[key]).replaceAll('"','""')}"`).join(',')).join('\r\n')+'\r\n';}
 function table(node,index) {
   const section=create('section'),wrap=create('div',undefined,'table-wrap'),element=create('table');
+  if(node.fixedRows){element.className='aging-schedule';wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label','Aging schedule: age buckets across the top. Scroll horizontally to view each bucket; the total column stays visible.');}
   const caption=create('caption',lesson.position.stage===3?'Completed aging schedule':'Aging estimates');caption.className='visually-hidden';
   element.append(caption);const columns=Object.keys(node.rows[0]),head=create('thead'),tr=create('tr'),body=create('tbody');
   let rows=[...node.rows],sort=null,descending=false;
-  const renderRows=()=>{body.replaceChildren();for(const row of rows){const line=create('tr');for(const key of columns)line.append(create('td',String(row[key])));body.append(line);}};
-  columns.forEach(key=>{const cell=create('th'),button=create('button',key);button.type='button';cell.scope='col';
+  const renderRows=()=>{body.replaceChildren();for(const row of rows){const line=create('tr');columns.forEach((key,i)=>{const cell=create(node.fixedRows&&i===0?'th':'td',String(row[key]));if(node.fixedRows&&i===0)cell.scope='row';line.append(cell);});body.append(line);}};
+  columns.forEach(key=>{const cell=create('th');cell.scope='col';
+    if(node.fixedRows){cell.textContent=key;tr.append(cell);return;}
+    const button=create('button',key);button.type='button';
     button.addEventListener('click',()=>{descending=sort===key?!descending:false;sort=key;
       rows=[...node.rows].sort((a,b)=>String(a[key]).localeCompare(String(b[key]),'en')*(descending?-1:1));
       for(const header of tr.children)header.removeAttribute('aria-sort');cell.setAttribute('aria-sort',descending?'descending':'ascending');renderRows();});
     cell.append(button);tr.append(cell);});
   head.append(tr);element.append(head,body);renderRows();wrap.append(element);section.append(wrap);
+  if(node.fixedRows){const hint=create('p','Age buckets run across the top. On a narrow screen, scroll the schedule horizontally to see every age bucket; totals remain visible on the right.','caption table-help');section.append(hint);}
   const tools=create('div',undefined,'table-tools'),download=create('button','Download table as CSV');download.type='button';
   const expand=create('button','Expand table');expand.type='button';
   expand.addEventListener('click',()=>{
@@ -151,7 +155,7 @@ function renderNode(node,index) {
   }
   let text=node.text;
   if(node.kind==='caption'&&lesson.position.stage===7&&text.startsWith('Valuation first pass:')) {
-    const score=scoreSummary(lesson.state);text=`Valuation first pass: ${category('valuation',5)} | All first-pass decisions: ${score.correct} of ${score.total} | Practice revisions used: ${score.revisions} | Final mastery: complete`;
+    const score=scoreSummary(lesson.state);text=`Valuation first pass: ${category('valuation',DATA.valuationFields.length+1)} | All first-pass decisions: ${score.correct} of ${score.total} | Practice revisions used: ${score.revisions} | Final mastery: complete`;
   }
   const heading=node.kind==='header'?'h2':node.kind==='subheader'?'h3':'p';
   const result=create(heading,text,['success','warning','info'].includes(node.kind)?`notice ${node.kind}`:node.kind==='caption'?'caption':null);
